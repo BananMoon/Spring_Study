@@ -23,3 +23,12 @@ It's a workspace where I study Spring to become a backend developer.
 -  회원 레포지토리 테스트케이스 작성<br>
 -  회원 서비스 개발<br>
 -  회원 서비스 테스트
+
+---
+
+## 2. StudyNote 
+> 참고 강의 : 웹개발의 봄, Spring
+> 
+| 목차 | 정리 |
+| :- | :-: |
+| 자바기초문법과 Spring 기초 | [링크](https://github.com/BananMoon/Spring_Study/blob/main/StudyNote/1_%EA%B8%B0%EC%B4%88.md)|
