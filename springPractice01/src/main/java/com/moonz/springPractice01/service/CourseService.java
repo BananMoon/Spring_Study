@@ -2,6 +2,7 @@ package com.moonz.springPractice01.service;
 
 import com.moonz.springPractice01.domain.Course;
 import com.moonz.springPractice01.domain.CourseRepository;
+import com.moonz.springPractice01.domain.CourseRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +23,11 @@ public class CourseService {
 //    } -> courseRepository 생성자대신 lombok으로!
 
     @Transactional // SQL 쿼리가 일어나야 함을 스프링에게 알려줌
-    public Long update(Long id, Course course) {    // UPDATE할 때 필요한 정보
+    public Long update(Long id, CourseRequestDto requestDto) {    // UPDATE할 때 필요한 정보
         Course course1 = courseRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 아이디가 존재하지 않습니다.")
         );      // ID를 찾으면
-        course1.update(course);     //course 정보가 Course.java의 update 메서드(로 넘어감
+        course1.update(requestDto);     //course 정보가 Course.java의 update 메서드(로 넘어감
         return course1.getId();     //Update하면 id값을 return해서 알려줌
     }
 }
