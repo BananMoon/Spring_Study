@@ -2,6 +2,7 @@ package com.moonz.springPractice01;
 
 import com.moonz.springPractice01.domain.Course;
 import com.moonz.springPractice01.domain.CourseRepository;
+import com.moonz.springPractice01.domain.CourseRequestDto;
 import com.moonz.springPractice01.service.CourseService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -55,8 +56,9 @@ public class SpringPractice01Application {
             );
 
         // 데이터 한개 수정하기
-            Course new_course = new Course("웹개발의 봄, Spring", "임민영");
-            courseService.update(1L, new_course);   //id와 course 정보 전달
+//            Course new_course = new Course("웹개발의 봄, Spring", "임민영");  -> 이 클래스를 가지고 다니지 않고, DTO를 활용해보자.
+            CourseRequestDto requestDto = new CourseRequestDto("웹개발의 봄, Spring", "임민영");
+            courseService.update(1L, requestDto);   //id와 course 정보 전달
             courseList = courseRepository.findAll();
 
             for (Course course: courseList) {
