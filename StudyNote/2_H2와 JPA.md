@@ -42,3 +42,77 @@
 - Repository : **SQL** 역할
   - Repository는 interface로 만든다.
   - interface : 클래스에서 멤버가 빠진, 메소드 모음집
+
+<br>
+
+## JPA 심화
+- JPA로 CRUD 기능을 할 수 있다.
+1. Creat와 Read는 Repository의 `save()`와 `findAll()` 을 이용한다. 
+```java
+// 데이터 저장하기
+repository.save(new Course("프론트엔드의 꽃, 리액트", "임민영"));
+
+// 데이터 전부 조회하기
+List<Course> courseList = repository.findAll();
+for (int i=0; i<courseList.size(); i++) {
+    Course course = courseList.get(i);
+    System.out.println(course.getId());
+    System.out.println(course.getTitle());
+    System.out.println(course.getTutor());
+}
+
+// 데이터 하나 조회하기
+Course course = repository.findById(1L).orElseThrow(
+        () -> new IllegalArgumentException("해당 아이디가 존재하지 않습니다.")
+);
+```
+
+> Spring의 구조
+> 1. Controller : 가장 바깥 부분, 요청/응답을 처리
+> 2. Service : 중간 부분, 실제 중요한 작동이 많이 발생함
+> 3. Repository : 가장 안쪽 부분, DB와 맞닿아 관리(생성, 삭제 등)하는 역할
+
+2. Update
+> Update는 Service를 이용해야하기 때문에 Service를 먼저 만든 후 Upddate 메서드를 만든다.
+- Course 클래스에 `update` 메소드 추가
+- service 패키지 생성 후, `CourseService.java` 생성
+- main 클래스에서 update 메서드 호출문 추가
+
+3. Delete
+- 데이터 삭제는 `deleteAll()` 메서드로 손쉽게 가능하다.
+
+**[최종 main 클래스 내부 코드]**
+```java
+@Bean
+public CommandLineRunner demo(CourseRepository courseRepository, CourseService courseService) {
+    return (args) -> {
+
+// 데이터 생성
+        courseRepository.save(new Course("프론트엔드의 꽃, 리액트", "임민영"));
+
+// 데이터 조회
+        System.out.println("데이터 인쇄");
+        List<Course> courseList = courseRepository.findAll();
+        for (int i=0; i<courseList.size(); i++) {
+            Course course = courseList.get(i);
+            System.out.println(course.getId());
+            System.out.println(course.getTitle());
+            System.out.println(course.getTutor());
+        }
+
+// 데이터 업데이트
+        Course new_course = new Course("웹개발의 봄, Spring", "임민영");
+        courseService.update(1L, new_course);
+        courseList = courseRepository.findAll();
+        for (int i=0; i<courseList.size(); i++) {
+            Course course = courseList.get(i);
+            System.out.println(course.getId());
+            System.out.println(course.getTitle());
+            System.out.println(course.getTutor());
+        }
+
+// 데이터 삭제
+        courseRepository.deleteAll();
+    };
+}
+```
