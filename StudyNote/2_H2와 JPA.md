@@ -42,5 +42,3 @@
 - Repository : **SQL** 역할
   - Repository는 interface로 만든다.
   - interface : 클래스에서 멤버가 빠진, 메소드 모음집
-
-## JPA 사용
