@@ -67,7 +67,7 @@ public class SpringPractice01Application {
                 System.out.println(course.getTutor());
             }
 
-            courseRepository.deleteAll();
+//            courseRepository.deleteAll();
         };
     }
 }
