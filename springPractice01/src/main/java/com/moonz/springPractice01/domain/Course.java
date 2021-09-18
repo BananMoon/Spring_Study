@@ -2,7 +2,6 @@ package com.moonz.springPractice01.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import javax.persistence.*;
 
@@ -20,6 +19,11 @@ public class Course extends Timestamped {
 
     @Column(nullable = false)
     private String tutor;
+
+    public Course(CourseRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.tutor = requestDto.getTutor();
+    }
 
     //repository에서 setter는 해줌
     public Course(String title, String tutor) {
