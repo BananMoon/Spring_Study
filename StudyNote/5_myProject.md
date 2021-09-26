@@ -2,6 +2,16 @@
 ### 숙제를 진행하면서 기억해놓고 싶은 것들:sparkles:을 적어보았다. 
 <hr>
 
+### 0. 프로젝트 Setting
+#### :fire: Spring boot 프로젝트 Setting을 진행한다. 
+> <참고><br>
+> [SpringBoot페이지](https://start.spring.io/)에서 아래와 같이 프로젝트 셋팅을 진행하였다. 다운로드받은 후, 알집을 풀어준다. <br>
+> 그후, IDE(본인은 IntelliJ)에서 새 프로젝트 생성 버튼을 클릭하여, (Gradle Project인 경우) build.gradle 파일 선택 후 open하면 프로젝트가 잘 셋팅된다.
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/66311276/134805672-bb27173e-8e6e-42a7-bea8-de5616b9e12a.png" alt="text" width="700" />
+</p>
+<br>
+
 ### 1. 디렉토리 구조
 #### :fire: 필요한 폴더는 총 `Domain`, `Service`, `Controller` 이다.<br>
 📁 **Domain**<br>
