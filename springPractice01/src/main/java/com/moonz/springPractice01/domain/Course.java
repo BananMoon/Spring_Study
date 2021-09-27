@@ -2,7 +2,7 @@ package com.moonz.springPractice01.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
+import org.springframework.data.annotation.Id;
 import javax.persistence.*;
 
 @Getter
