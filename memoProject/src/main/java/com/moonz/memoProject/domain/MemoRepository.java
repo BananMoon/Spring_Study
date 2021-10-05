@@ -1,13 +1,19 @@
 package com.moonz.memoProject.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 /* 클래스에서 멤버변수없는, method만 있는 녀석 */
 //Memo라는 클래스고, id가 Long인 녀석에 가져다 쓸 것이다.
 
 public interface MemoRepository extends JpaRepository<Memo, Long> {
-    List<Memo> findAllByOrderByModifiedAtDesc();
+//    List<Memo> findAllByOrderByModifiedAtDesc();
+
+
+    List<Memo> findAllByModifiedAtBetweenOrderByModifiedAtDesc(LocalDateTime start, LocalDateTime end);
+
 }
     /*
     쿼리문을 날릴 때, JpaRepository에 있는 메서드 외에, 내가 원하는 식으로 (커스터마이징해서) 쿼리문을 생성하고자 한다.

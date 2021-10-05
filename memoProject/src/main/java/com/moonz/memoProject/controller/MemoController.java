@@ -8,6 +8,9 @@ import com.moonz.memoProject.service.MemoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -25,7 +28,11 @@ public class MemoController {
 
     @GetMapping("/api/memos")
     public List<Memo> getMemos() {
-        return memoRepository.findAllByOrderByModifiedAtDesc();
+//        return memoRepository.findAllByOrderByModifiedAtDesc();
+        LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.of(0,0,0));//어제
+        LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
+
+        return memoRepository.findAllByModifiedAtBetweenOrderByModifiedAtDesc(startDatetime, endDatetime);
     }
 
     @PutMapping("/api/memos/{id}")
