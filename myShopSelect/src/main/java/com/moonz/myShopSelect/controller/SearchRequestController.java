@@ -18,6 +18,6 @@ public class SearchRequestController {
     @GetMapping("/api/search")  //api/search?query=검색어 : 주소는 ? 앞에까지. ?query={검색어} 일 경우 @RequestParam 추가
     public List<ItemDto> execSearch(@RequestParam String query) {    // 매개변수 이름과 주소에 들어갈 이름은 일치해야함.
         String resultString = naverShopSearch.search(query);
-        return naverShopSearch.fromJsonToItems(resultString);
+        return naverShopSearch.fromJSONtoItems(resultString);
     }
 }

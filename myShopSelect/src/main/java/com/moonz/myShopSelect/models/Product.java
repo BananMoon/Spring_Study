@@ -36,7 +36,11 @@ public class Product extends Timestamped{
         this.myprice = 0;   //사용자의 최저가보다 가격이 작으면 최저가 딱지가 붙기 때문에, 사용자가 설정하기 전까지는 0
     }
 
-    public void update(ProductMypriceRequestDto productMypriceRequestDto) {
+    public void updateMyPrice(ProductMypriceRequestDto productMypriceRequestDto) {
         this.myprice = productMypriceRequestDto.getMyprice();
+    }
+
+    public void updateByItemDto(ItemDto itemDto) {
+        this.lprice = itemDto.getLprice();
     }
 }

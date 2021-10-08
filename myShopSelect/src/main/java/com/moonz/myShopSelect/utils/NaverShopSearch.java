@@ -36,7 +36,7 @@ public class NaverShopSearch {
 
 
     //자주 사용될 것을 메서드로
-    public List<ItemDto> fromJsonToItems(String result) {
+    public List<ItemDto> fromJSONtoItems(String result) {
         JSONObject rjson = new JSONObject(result);  //문자열(result) 정보를 JSONObject로 바꾸기
 //        System.out.println(rjson);  // items는 JSONArray
         JSONArray items = rjson.getJSONArray("items");  //key값이 items
