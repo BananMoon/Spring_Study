@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 
 //ORM -> Java Object -> (MySQL) 테이블로 매핑해주는 기술
 @Builder
-@Data
+@Data   // Setter, Getter O
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity //User 클래스를 통해 MySQL에 테이블이 생성됨
@@ -27,7 +27,7 @@ public class User {
     // Generation.SEQUENCE : auto-increment 사용 불가
     // Generation.IDENTITY : DB의 넘버링전략 (Oracle: Sequence, mysql: auto_increment) 따라가겠다.
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 30, unique = true)
     private String username;    // 아이디
 
     @Column(nullable = false, length = 100) // 123456-> 해쉬(비번 암호화)된 값을 db에 저장하기 때문
