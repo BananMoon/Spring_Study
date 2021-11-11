@@ -14,14 +14,7 @@ public class UserService {
     private UserRepository userRepository;
 
     @Transactional      // 전체에서 실패하면 Rollback됨. 따로 로직을 짜줘야함. 현재는 1개의 트랜잭션이므로 생략.
-    public int 회원가입(User user) {
-        try {
-            User user1 = userRepository.save(user);
-            return 1;
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("UserService : 회원가입() : " + e.getMessage());
-        }
-        return -1; //  에러발생하면 여기로 !
+    public void 회원가입(User user) {
+        userRepository.save(user);  // 에러 발생 시 자동으로 GlobalExcptionHandler 호출
     }
 }

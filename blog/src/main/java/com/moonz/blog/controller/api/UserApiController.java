@@ -21,7 +21,7 @@ public class UserApiController {
 //        return new ResponseDto<Integer>(200, 1);
         // 실제로 DB에 insert하고 아래에서 return.
         user.setRole(RoleType.USER);    // 추가로 강제로 세팅해줘야하는 필드.
-        int result = userService.회원가입(user);
-        return new ResponseDto<Integer>(HttpStatus.OK, result);
+        userService.회원가입(user);
+        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
     }
 }

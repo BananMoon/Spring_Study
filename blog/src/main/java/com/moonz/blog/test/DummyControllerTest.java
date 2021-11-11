@@ -126,7 +126,7 @@ User user = userRepository.findById(id).orElseThrow(new Supplier<IllegalArgument
 // Java 1.8에서는 Supplier<제네릭>과 같은 것을 사용하지 않고, 람다식으로 쉽게 작성하도록 제공함.
 /*
 User user = userRepository.findById(id).orElseThrow(() -> {
-    return new Ille("해당 사용자는 없습니다. id : "+ id);
+    return new IllegalArgumentException("해당 사용자는 없습니다. id : "+ id);
 });
  */
     }
