@@ -33,12 +33,14 @@ public class Board {
     //Many: board, One: User
     @ManyToOne
     @JoinColumn(name="userId")
-    private User userId;    // 자바는 오브젝트를 저장할 수 있지만, DB는 오브젝트를 저장할 수 없다.
+    private User userId;
+    // 자바는 오브젝트를 저장할 수 있지만, DB는 오브젝트를 저장할 수 없다.
     // 자바에서 DB에 맞춰서 데이터를 만들어야함.
     // 자바에서 Object로 생성 후, 자동으로 FK가 생성되도록 @ManyToOne 을 추가
 
     @OneToMany (mappedBy = "board")     // 하나의 게시물에 여러개의 댓글들
-    private List<Reply> reply; // 난 연관관계의 주인이 아니다.(FK가 아니다)  DB에 칼럼을 만들지 마세요.
+    private List<Reply> reply;
+    // 난 연관관계의 주인이 아니다.(FK가 아니다)  DB에 칼럼을 만들지 마세요.
     // 나는 단지 JOIN문을  통해 값을 얻기위해 필요한 것
     // mappedBy= "연관관계맺는 필드 이름"
 

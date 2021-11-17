@@ -5,6 +5,9 @@ let index = {
         $("#btn-save").on("click", () => {      // this를 바인딩하기 위해 화살표 함수 사용하여 해당 내부의 값을 가리키도록 함!
             this.save();
         } );
+        $("#btn-login").on("click", () => {      // this를 바인딩하기 위해 화살표 함수 사용하여 해당 내부의 값을 가리키도록 함!
+            this.login();
+        } );
     },
     save: function () {
         // alert('user의 save함수 호출됨');
@@ -20,7 +23,7 @@ let index = {
         $.ajax({
             // 회원가입 수행 요청
             type:"POST",
-            url: "/blog/api/user",
+            url: "/api/user",
             data: JSON.stringify(data),      // json화하여 body로 전송
             contentType: "application/json; charset=utf-8",     // body 데이터의 타입
             // dataType: "json"    // 서버로부터의 응답데이터 타입 (기본적으로 byte로 와서 String으로 변환) => javascript 오브젝트로 변환해서 응답옴
@@ -30,7 +33,27 @@ let index = {
             // status는 통신 결과, data는 데이터
             alert("회원가입이 완료되었습니다.");
             console.log(res);
-            // location.href="/blog";
+            // location.href="/";
+        }).fail(function (err) {
+            alert(JSON.stringify(err));
+        });
+
+    },
+    login: function () {
+        // alert('user의 save함수 호출됨');
+        let data = {
+            username: $("#username").val(),
+            password: $("#password").val()
+        };
+       $.ajax({
+            // 회원가입 수행 요청
+            type:"POST",
+            url: "/api/user/login",
+            data: JSON.stringify(data),      // json화하여 body로 전송
+            contentType: "application/json; charset=utf-8",     // body 데이터의 타입
+        }).done(function(res) { // javascript 오브젝트로 res에 들어옴
+            alert("로그인이 완료되었습니다.");
+            location.href="/";
         }).fail(function (err) {
             alert(JSON.stringify(err));
         });
