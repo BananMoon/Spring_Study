@@ -39,6 +39,7 @@ It's a workspace where I study Spring to become a backend developer.
 | 간단한 Memo Web 프로젝트 | [링크1](https://github.com/BananMoon/Spring_Study/blob/main/StudyNote/6_Memo%20API(1).md), [링크2]() | 
 
 ## 3. firstproject
+REST API로 Create, Read, Update, Delete 로직을 수행한 간단한 과제 프로젝트 📑
 
 ## 4. MemoProject
 > 최종 결과물
