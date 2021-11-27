@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * 동시성 문제가 고려되어 있지 않음, 실무에서는 ConcurrentHashMap, AtomicLong 사용 고려
  */
-@Repository
+//@Repository
 public class MemoryMemberRepository  implements MemberRepository{
     private static Map<Long, Member> store = new HashMap<>();   // 실무에서는 공유되는 값은 ConcurrentHashMap 사용!
     private static long sequence = 0L;  // 실무에서는 동시성문제로, AtomicLong 사용
