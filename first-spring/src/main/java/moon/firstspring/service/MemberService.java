@@ -4,15 +4,16 @@ import moon.firstspring.domain.Member;
 import moon.firstspring.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@Transactional
 public class MemberService {
     private final MemberRepository memberRepository; // 매번 생성되도록 하지말고
 
-  //  @Autowired  // memberRepository에 DI
+    @Autowired  // memberRepository에 DI
     public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;   // 직접 new하지 않고, 외부에서 넣어주는 DI! (Dependency Injection)
     }

@@ -1,25 +1,17 @@
 {{>layout/header}}
-<div class="container-fluid mt-3">
-    <form action="/action_page.php">
-
-        <div class="mb-3 mt-3">
+<div class="container">
+    <form action="/auth/loginProc" method="post">
+        <div class="form-group">
             <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-control" id="username" placeholder="Enter username" name="email">
+            <input type="text" name="username" class="form-control" id="username" placeholder="Enter username">
         </div>
 
-        <div class="mb-3">
+        <div class="form-group">
             <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" placeholder="Enter password" name="password">
+            <input type="password" name="password" class="form-control" id="password" placeholder="Enter password">
         </div>
-        <div class="form-check mb-3">
-            <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" name="remember"> Remember me
-            </label>
-        </div>
+        <button id="btn-login" class="btn btn-primary">로그인</button> <!-- form안에 넣어서 submit 버튼 누르면 action 발생하도록 -->
     </form>
-    <button id="btn-login" class="btn btn-primary">로그인</button>
-
 </div>
-
-<script src = "/js/user.js"></script>
+<!--<script src = "/js/user.js"></script> 폼으로 로그인할 거기때문에 js 필요없음.-->
 {{>layout/footer}}
