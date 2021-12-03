@@ -1,5 +1,6 @@
 package moon.firstspring;
 
+import moon.firstspring.aop.TimeTraceAop;
 import moon.firstspring.repository.MemberRepository;
 import moon.firstspring.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,10 @@ public class SpringConfig {
         this.memberRepository = memberRepository;   // 의존관계 세팅
     }
 
-
+    @Bean
+    public TimeTraceAop timeTraceAop() {
+        return new TimeTraceAop();
+    }
     //  @persistenceContext 를 안붙여줘도 Spring에서 DI해줌
 //    private EntityManager em;
 //
