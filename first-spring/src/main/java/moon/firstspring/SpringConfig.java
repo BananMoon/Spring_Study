@@ -17,10 +17,10 @@ public class SpringConfig {
         this.memberRepository = memberRepository;   // 의존관계 세팅
     }
 
-    @Bean
-    public TimeTraceAop timeTraceAop() {
-        return new TimeTraceAop();
-    }
+//    @Bean
+//    public TimeTraceAop timeTraceAop() {
+//        return new TimeTraceAop();
+//    }
     //  @persistenceContext 를 안붙여줘도 Spring에서 DI해줌
 //    private EntityManager em;
 //
