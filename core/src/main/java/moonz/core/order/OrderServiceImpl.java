@@ -1,14 +1,18 @@
 package moonz.core.order;
 
 import moonz.core.discount.DiscountPolicy;
-import moonz.core.discount.FixDiscountPolicy;
 import moonz.core.member.Member;
 import moonz.core.member.MemberRepository;
-import moonz.core.member.MemoryMemberRepository;
 
 public class OrderServiceImpl implements OrderService{
-    private final MemberRepository memberRepository = new MemoryMemberRepository();
-    private final DiscountPolicy discountPolicy = new FixDiscountPolicy();
+    // 오직 추상화에만 의존!
+    private final MemberRepository memberRepository;
+    private final DiscountPolicy discountPolicy;  // DIP 지킨 모습! final은 초기화를 해줘야하므로 지워준다.
+
+    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+        this.memberRepository = memberRepository;
+        this.discountPolicy = discountPolicy;
+    }
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {

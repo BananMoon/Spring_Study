@@ -1,15 +1,23 @@
 package moonz.core.order;
 
+import moonz.core.AppConfig;
 import moonz.core.member.Grade;
 import moonz.core.member.Member;
 import moonz.core.member.MemberService;
-import moonz.core.member.MemberServiceImpl;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class OrderServiceTest {
-    MemberService memberService = new MemberServiceImpl();
-    OrderService orderService = new OrderServiceImpl();
+    //   수정
+    MemberService memberService;
+    OrderService orderService;
+    @BeforeEach
+    void beforeEach() {
+        AppConfig appConfig = new AppConfig();
+        memberService = appConfig.memberService();
+        orderService = appConfig.orderService();
+    }
 
     @Test
     void createOrder() {

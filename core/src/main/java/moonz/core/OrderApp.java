@@ -10,8 +10,14 @@ import moonz.core.order.OrderServiceImpl;
 //TEST (수동)
 public class OrderApp {
     public static void main(String[] args) {
-        MemberService memberService = new MemberServiceImpl();
-        OrderService orderService = new OrderServiceImpl();
+        // 수정
+        MemberService memberService;
+        OrderService orderService;
+
+        AppConfig appConfig = new AppConfig();
+        memberService = appConfig.memberService();
+        orderService = appConfig.orderService();
+
         // 멤버 생성
         long memberId = 1L;
         Member member = new Member(memberId, "memberA", Grade.VIP);
