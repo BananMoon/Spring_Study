@@ -8,7 +8,7 @@ import moonz.core.order.OrderService;
 import moonz.core.order.OrderServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
+// 팩터리 메서드를 통해서 우회하여 등록하는 방법
 @Configuration
 public class AppConfig {
      // 스프링 컨테이너에 등록! 해당 메서드 이름으로 등록됨.
