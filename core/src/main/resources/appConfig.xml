@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-<!--    AppConfig에서 bean으로 memberService와 memberRepository 등록한 것과 같음.-->
+<!--    AppConfig에서 bean으로 등록한 것과 같음.-->
     <bean id="memberService" class="moonz.core.member.MemberServiceImpl">
         <constructor-arg name="memberRepository" ref="memberRepository"/>
     </bean>
@@ -14,4 +14,5 @@
         <constructor-arg name="memberRepository" ref="memberRepository"/>
         <constructor-arg name="discountPolicy" ref="discountPolicy"/>
     </bean>
+    <bean id="discountPolicy" class="moonz.core.discount.RateDiscountPolicy"/>
 </beans>
