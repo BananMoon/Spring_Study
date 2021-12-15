@@ -24,4 +24,9 @@ public class OrderServiceImpl implements OrderService{
         int discountPrice = discountPolicy.discount(member, itemPrice);  // 확장성을 고려해서 member 자체를 넘길지 grade만 넘길지 정하면 됨.
         return new Order(memberId, itemName, itemPrice, discountPrice);
     }
+
+    // test 용도
+    public MemberRepository getMemberRepository() {
+        return memberRepository;
+    }
 }
