@@ -7,7 +7,6 @@ public class MemberServiceImpl implements MemberService {
         this.memberRepository = memberRepository;
     }
 
-
     @Override
     public void join(Member member) {
         memberRepository.save(member);
@@ -16,5 +15,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member findMember(Long memberId) { // 관례: 구현체가 1개인 경우 "인터페이스명+Impl"
         return memberRepository.findById(memberId);
+    }
+
+    // test 용도
+    public MemberRepository getMemberRepository() {
+        return memberRepository;
     }
 }
