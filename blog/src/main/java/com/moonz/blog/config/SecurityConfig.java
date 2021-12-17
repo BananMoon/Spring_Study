@@ -45,10 +45,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .permitAll()
                     .anyRequest()   // 그외의 모든 요청은
                     .authenticated()  // 보안 검사를 하여 인증이 되어야한다.
-                .and()  // '/auth/~~'외엔 다 인증이 필요하니까
+                .and()  // '/auth/~~'외 모든 페이지 요청은 다 인증이 필요하니까 loginForm으로 이동
                     .formLogin()    //보안 검증은 formLogin방식으로 하겠다.
-                    .loginPage("/auth/loginForm")  // 로그인페이지로 이동하도록 한다.
+                    .loginPage("/auth/loginForm")  // 로그인페이지로 이동하도록 해서 해당 화면에서 로그인 버튼을 클릭하면 아래 url 요청으로 오면
                     .loginProcessingUrl("/auth/loginProc") // the URL(to validate username and password)을 파라미터로 적으면 시큐리티가 로그인 처리를 진행한다. 이때 PrincipalDetailService의 loadUserByUsername로 user 정보를 전달한다.
-                    .defaultSuccessUrl("/");    // 정상적으로 인증이 끝나면 어떤 url로 가는가? 실패시 url 이동 메서드 :   .failureUrl()
+                    .defaultSuccessUrl("/");    // 정상적으로 로그인 인증이 끝나면 어디로 가는가? 실패시 url 이동 메서드 :   .failureUrl()
+
+        // 세션 등록할 때 UserObject를 등록하면 안되므로 UserDetails를 등록한다.
     }
 }

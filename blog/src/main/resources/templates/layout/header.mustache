@@ -1,6 +1,6 @@
-{{#sec:isAuthenticated()}}
-    {{#sec:principal}}{{/sec:principal}}
-{{/sec:isAuthenticated()}}
+{{^sec:authorize access="isAuthenticated()"}}
+    {{sec:authentication property="principal" var="principal"}}
+{{/sec:authorize}}
 
 <!DOCTYPE html>
 <html lang="en">
