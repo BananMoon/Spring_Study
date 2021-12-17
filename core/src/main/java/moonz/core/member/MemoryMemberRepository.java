@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MemoryMemberRepository implements MemberRepository{
-    private Map<Long, Member> store = new HashMap<>();  // 실무에서는 동시성 문제때문에 cuncurrent hashmap을 써야함.
+    private static Map<Long, Member> store = new HashMap<>();  // 실무에서는 동시성 문제때문에 cuncurrent hashmap을 써야함.
+    // 주의 : Map을 static으로 생성하지 않으면 다른 곳에서 같은 메로리를 공유하지 못함
 
     @Override
     public void save(Member member) {
