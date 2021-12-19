@@ -25,6 +25,12 @@ public class ConfigurationSingletonTest {
         // 같은 인스턴스로 조회
         Assertions.assertThat(memberRepository).isSameAs(memberRepository1);
         Assertions.assertThat(memberRepository1).isSameAs(memberRepository2);
-
+    }
+    @Test
+    void configurationDeep() {
+        AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(AppConfig.class);
+        // AppConfig도 스프링 빈으로 등록되므로
+        AppConfig bean = ac.getBean(AppConfig.class);
+        System.out.println("bean = " + bean.getClass());
     }
 }

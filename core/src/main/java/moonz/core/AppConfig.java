@@ -24,7 +24,7 @@ public class AppConfig {
     @Bean
     public MemberRepository memberRepository() {
         System.out.println("call AppConfig.memberRepository");
-        return new MemoryMemberRepository();
+        return new MemoryMemberRepository();    // Spring에 상관없이 자바에서 생성하는 것
     }
     // orderService에서는 레포지토리와 할인 정책을 사용하므로 생성자에서 2개 모두 주입.
     @Bean
