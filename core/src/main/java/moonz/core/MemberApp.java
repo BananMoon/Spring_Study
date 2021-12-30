@@ -3,7 +3,6 @@ package moonz.core;
 import moonz.core.member.Grade;
 import moonz.core.member.Member;
 import moonz.core.member.MemberService;
-import moonz.core.member.MemberServiceImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
