@@ -17,9 +17,15 @@ import org.springframework.context.annotation.FilterType;
         excludeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Configuration.class) // 수동으로 등록하는 AppConfig 파일을 제외 !
 )
 public class AutoAppConfig {
-    @Autowired MemberRepository memberRepository;
-    @Autowired
+    MemberRepository memberRepository;
     DiscountPolicy discountPolicy;
+
+    @Autowired
+    public AutoAppConfig(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+        this.memberRepository = memberRepository;
+        this.discountPolicy = discountPolicy;
+    }
+
     @Bean
     OrderService orderService() {
         return new OrderServiceImpl(memberRepository, discountPolicy);

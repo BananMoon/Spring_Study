@@ -19,10 +19,10 @@ public class AppConfig {
     @Bean
     public MemberService memberService() {
         System.out.println("call AppConfig.memberService");
-        return new MemberServiceImpl(getMemberRepository());
+        return new MemberServiceImpl(memberRepository());
     }
     @Bean
-    public MemberRepository getMemberRepository() {
+    public MemberRepository memberRepository() {
         System.out.println("call AppConfig.memberRepository");
         return new MemoryMemberRepository();    // Spring에 상관없이 자바에서 생성하는 것
     }
@@ -30,11 +30,11 @@ public class AppConfig {
     @Bean
     public OrderService orderService() {
         System.out.println("call AppConfig.orderService");
-        return new OrderServiceImpl(getMemberRepository(), getDiscountPolicy());
+        return new OrderServiceImpl(memberRepository(), discountPolicy());
     }
 
     @Bean
-    public RateDiscountPolicy getDiscountPolicy() {
+    public RateDiscountPolicy discountPolicy() {
 //        return new FixDiscountPolicy();
         return new RateDiscountPolicy();
     }
