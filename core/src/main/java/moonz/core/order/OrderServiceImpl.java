@@ -1,5 +1,6 @@
 package moonz.core.order;
 
+import lombok.RequiredArgsConstructor;
 import moonz.core.discount.DiscountPolicy;
 import moonz.core.member.Member;
 import moonz.core.member.MemberRepository;
@@ -7,10 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService{
     // 오직 추상화에만 의존!
-    private MemberRepository memberRepository;
-    private DiscountPolicy discountPolicy;  // DIP 지킨 모습! final을 설정함으로써 (생성자를 통해) 초기화를 무조건 해줘야한다.(setter 생성할 경우 지워줘야한다.)
+    private final MemberRepository memberRepository;
+    private final DiscountPolicy discountPolicy;  // DIP 지킨 모습! final을 설정함으로써 (생성자를 통해) 초기화를 무조건 해줘야한다.(setter 생성할 경우 지워줘야한다.)
 
     /* 수정자 주입 : setter를 생성해줄 경우 final 키워드 없이 객체를 선언해야한다.
     @Autowired
@@ -21,11 +23,11 @@ public class OrderServiceImpl implements OrderService{
     public void setDiscountPolicy(DiscountPolicy discountPolicy) {
         this.discountPolicy = discountPolicy;
     } */
-    @Autowired  // 생성자에서 여러 의존관계를 한번에 주입받을 수 있다.
+/*    @Autowired  // 생성자에서 여러 의존관계를 한번에 주입받을 수 있다.
     public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
         this.memberRepository = memberRepository;
         this.discountPolicy = discountPolicy;
-    }
+    }*/
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {

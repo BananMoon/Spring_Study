@@ -29,7 +29,7 @@ public class AutoAppConfig {
     // 수동 빈 등록이 우선권을 가진다. (자동 빈을 오버라이딩) =>
     // 이제는 중복 빈 등록 시 에러 발생시킴
     // : Consider renaming one of the beans or enabling overriding by setting spring.main.allow-bean-definition-overriding=true
-/*
+/* 수동 빈 등록
     @Bean
     OrderService orderService() {
         return new OrderServiceImpl(memberRepository, discountPolicy);
