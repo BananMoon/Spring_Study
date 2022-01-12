@@ -9,7 +9,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
 
     @Autowired  // ac.getBean(MemberRepository.class)
-    public MemberServiceImpl(@Qualifier("memberRepository") MemberRepository memberRepository) {
+    public MemberServiceImpl(@Qualifier("memoryMemberRepository") MemberRepository memberRepository) {    // @Qualifier() : 특정한 객체를 찾기위한 이름을 지정
         this.memberRepository = memberRepository;
     }
 
