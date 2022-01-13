@@ -1,6 +1,7 @@
 package moonz.core.order;
 
 import lombok.RequiredArgsConstructor;
+import moonz.core.annotation.MainDiscountPolicy;
 import moonz.core.discount.DiscountPolicy;
 import moonz.core.member.Member;
 import moonz.core.member.MemberRepository;
@@ -25,7 +26,7 @@ public class OrderServiceImpl implements OrderService{
         this.discountPolicy = discountPolicy;
     } */
     @Autowired  // 생성자에서 여러 의존관계를 한번에 주입받을 수 있다.
-    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+    public OrderServiceImpl(MemberRepository memberRepository, @MainDiscountPolicy DiscountPolicy discountPolicy) {
         this.memberRepository = memberRepository;
         this.discountPolicy = discountPolicy;
     }
