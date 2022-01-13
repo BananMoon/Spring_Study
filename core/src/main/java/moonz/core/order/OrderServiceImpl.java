@@ -5,10 +5,11 @@ import moonz.core.discount.DiscountPolicy;
 import moonz.core.member.Member;
 import moonz.core.member.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService{
     // 오직 추상화에만 의존!
     private final MemberRepository memberRepository;
@@ -23,11 +24,11 @@ public class OrderServiceImpl implements OrderService{
     public void setDiscountPolicy(DiscountPolicy discountPolicy) {
         this.discountPolicy = discountPolicy;
     } */
-/*    @Autowired  // 생성자에서 여러 의존관계를 한번에 주입받을 수 있다.
+    @Autowired  // 생성자에서 여러 의존관계를 한번에 주입받을 수 있다.
     public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
         this.memberRepository = memberRepository;
         this.discountPolicy = discountPolicy;
-    }*/
+    }
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {
@@ -44,4 +45,7 @@ public class OrderServiceImpl implements OrderService{
     public MemberRepository getMemberRepository() {
         return memberRepository;
     }
+/*    public DiscountPolicy getRateDiscountPolicy() {
+        return rateDiscountPolicy;
+    }*/
 }

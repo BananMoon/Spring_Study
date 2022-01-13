@@ -1,5 +1,6 @@
 package moonz.core;
 
+import lombok.RequiredArgsConstructor;
 import moonz.core.discount.DiscountPolicy;
 import moonz.core.member.MemberRepository;
 import moonz.core.member.MemoryMemberRepository;
@@ -10,21 +11,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
-
+@RequiredArgsConstructor
 @Configuration  // 중복된 객체를 생성하지 않고 등록한 빈을 주입하도록 함
 @ComponentScan(
         basePackages = "moonz.core",    // 만약 moonz.core.member로 하면 member 아래부터 컴포넌트  탐색됨
         excludeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Configuration.class) // 수동으로 등록하는 AppConfig 파일을 제외 !
 )
 public class AutoAppConfig {
-    MemberRepository memberRepository;
-    DiscountPolicy discountPolicy;
-
-    @Autowired
-    public AutoAppConfig(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
-        this.memberRepository = memberRepository;
-        this.discountPolicy = discountPolicy;
-    }
+    private final MemberRepository memberRepository;
+    private final DiscountPolicy rateDiscountPolicy;
 
     // 수동 빈 등록이 우선권을 가진다. (자동 빈을 오버라이딩) =>
     // 이제는 중복 빈 등록 시 에러 발생시킴
