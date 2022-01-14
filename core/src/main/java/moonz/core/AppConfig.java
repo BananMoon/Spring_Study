@@ -1,5 +1,6 @@
 package moonz.core;
 
+import moonz.core.discount.FixDiscountPolicy;
 import moonz.core.discount.RateDiscountPolicy;
 import moonz.core.member.MemberRepository;
 import moonz.core.member.MemberService;
@@ -31,7 +32,7 @@ public class AppConfig {
     @Bean
     public OrderService orderService() {
         System.out.println("call AppConfig.orderService");
-        return new OrderServiceImpl(memberRepository(), discountPolicy());
+        return new OrderServiceImpl(memberRepository(), discountPolicy());    // 생성자 주입
     }
 
     @Bean

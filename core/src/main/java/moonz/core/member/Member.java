@@ -1,5 +1,10 @@
 package moonz.core.member;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Member {
     private Long id;
     private String name;
@@ -10,7 +15,7 @@ public class Member {
         this.name = name;
         this.grade = grade;
     }
-    public long getId() {
+/*    public long getId() {
         return id;
     }
 
@@ -31,5 +36,5 @@ public class Member {
     }
     public void setGrade(Grade grade) {
         this.grade = grade;
-    }
+    }*/
 }
