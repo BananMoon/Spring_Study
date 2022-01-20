@@ -13,7 +13,7 @@ public class RateDiscountPolicy implements DiscountPolicy {
     private int discountPercent = 10;
 
     @Override
-    public int discount(Member member, int price) {
+    public int discount(Member member, int price) {     // VIP이면 가격의 10% 할인
         if (member.getGrade() == Grade.VIP) {
             return price * discountPercent / 100;
         } else {
