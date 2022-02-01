@@ -1,10 +1,13 @@
 package moonz.core.lifecycle;
 
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 // 가짜의 네트워크 연결 객체
-public class NetworkClient  {
+public class NetworkClient {
     private String url; // 접속할 서버 url
 
     public NetworkClient() {
