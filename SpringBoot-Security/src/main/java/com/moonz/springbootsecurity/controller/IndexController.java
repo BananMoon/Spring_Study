@@ -1,4 +1,5 @@
-package com.moonz.SpringbootSecurityBasicV1.controller;
+/*
+package com.moonz.springbootsecurity.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,3 +36,4 @@ public class IndexController {
     public @ResponseBody String joinProc() { return "회원가입 완료됨!"; }
 
 }
+*/

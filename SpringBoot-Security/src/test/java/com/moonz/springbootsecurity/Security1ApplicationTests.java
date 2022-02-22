@@ -1,4 +1,4 @@
-package com.moonz.SpringbootSecurityBasicV1;
+package com.moonz.springbootsecurity;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
