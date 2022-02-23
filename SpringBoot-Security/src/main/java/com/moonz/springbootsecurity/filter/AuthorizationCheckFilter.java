@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * 토큰 확인
+ */
 public class AuthenticationFilter extends OncePerRequestFilter {
     String HEADER_AUTH = "Authorization";
     @Override

@@ -1,14 +1,12 @@
 package com.moonz.springbootsecurity.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import com.moonz.springbootsecurity.filter.AuthenticationFilter;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import com.moonz.springbootsecurity.filter.AuthorizationCheckFilter;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -50,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 // 3. Security Filter에 필터 추가 ========================
         .and()
-                .addFilterBefore(new AuthenticationFilter(), SecurityContextPersistenceFilter.class);   // 1번 방법
+                .addFilterBefore(new AuthorizationCheckFilter(), SecurityContextPersistenceFilter.class);   // 1번 방법
         // 1. Security Filter가 있기 때문에 addFilter로 등록할 수 없고, Security Filter 전, 혹은 후에 거치도록 등록해야한다.
         // 1-1. 만약 Security Filter를 아예 거치기 전에 실행시키려면 SecurityContextPersistenceFilter.class 로 설정한다.
         // 2. Security Filter 중에 등록하지 않거나 여러 필터를 등록하면서 우선순위를 등록하는 방법 - FilterConfig 클래스! 단, Security Filter Chain보다 늦게 실행된다.

@@ -9,6 +9,11 @@ import javax.persistence.Id;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+/**
+ * User 정보를 담는 객체
+ * History : [2022-02-22]
+ */
 @Getter
 @Entity
 public class User {
