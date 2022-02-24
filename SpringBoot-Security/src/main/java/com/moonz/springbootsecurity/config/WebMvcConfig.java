@@ -1,4 +1,5 @@
-package com.moonz.SpringbootSecurityBasicV1.config;
+/*
+package com.moonz.springbootsecurity.config;
 
 import org.springframework.boot.web.servlet.view.MustacheViewResolver;
 import org.springframework.context.annotation.Configuration;
@@ -19,3 +20,4 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.viewResolver(resolver);    // 뷰 리졸버 등록
     }
 }
+*/

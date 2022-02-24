@@ -1,13 +1,13 @@
-package com.moonz.SpringbootSecurityBasicV1;
+package com.moonz.springbootsecurity;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Security1Application {
+public class SpringBootSecurityApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Security1Application.class, args);
+		SpringApplication.run(SpringBootSecurityApplication.class, args);
 	}
 
 }
