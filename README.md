@@ -1,8 +1,11 @@
 # Spring_Study
-It's a workspace where I study Spring to become a backend developer.
-<br><br>
 
-## 1. first-spring 📁
+<br><br>
+## 1. Security-Practice 📁
+- Spring Security 프레임워크와 JWT를 이용해 인증을 구현하는 연습을 하는 프로젝트입니다.
+
+
+## 2. first-spring 📁
 > 참고 강의 : 스프링 입문 - 코드로 배우는 스프링 부트, 웹 MVC, DB 접근 기술
 
 | 목차 | 정리 |
@@ -26,7 +29,7 @@ It's a workspace where I study Spring to become a backend developer.
 
 ---
 
-## 2. StudyNote 
+## 3. StudyNote 
 > 참고 강의 : 웹개발의 봄, Spring
 > 
 | 목차 | 정리 |
@@ -38,7 +41,7 @@ It's a workspace where I study Spring to become a backend developer.
 | 앞서 배운 개념 응용 프로젝트 | [링크](https://github.com/BananMoon/Spring_Study/blob/main/StudyNote/5_myProject.md), [프로젝트 코드](https://github.com/BananMoon/Spring_Study/tree/main/firstproject)|
 | 간단한 Memo Web 프로젝트 | [링크1](https://github.com/BananMoon/Spring_Study/blob/main/StudyNote/6_Memo%20API(1).md), [링크2]() | 
 
-## 3. firstproject
+## 4. firstproject
 REST API로 Create, Read, Update, Delete 로직을 수행한 간단한 과제 프로젝트 📑
 
 ## 4. MemoProject
@@ -46,4 +49,3 @@ REST API로 Create, Read, Update, Delete 로직을 수행한 간단한 과제 �
 <p align="center">
   <img src="https://user-images.githubusercontent.com/66311276/134867487-f61972c6-526e-4577-840e-6fd0c003b428.png" width="900"></img>
 </p>
-
