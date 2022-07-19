@@ -1,2 +1,6 @@
-package com.moonz.securitypractice.common;public enum Domain {
+package com.moonz.securitypractice.common;
+
+public enum Domain {
+    COMMON,
+    AUTH,
 }
