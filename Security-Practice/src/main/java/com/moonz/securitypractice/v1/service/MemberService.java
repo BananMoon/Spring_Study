@@ -15,12 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class MemberService {
 //    private final ApiResponse response;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public MemberResponseDto signUp(MemberRequestDto.SignUp signUpRequestDto) {
         // 1. is duplicate
         if (memberRepository.existsByUsername(signUpRequestDto.getUsername())) {
