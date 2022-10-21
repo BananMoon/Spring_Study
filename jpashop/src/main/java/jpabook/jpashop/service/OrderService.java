@@ -26,7 +26,7 @@ public class OrderService {
     public Long order(Long memberId, Long itemId, int count) {
         // 엔티티 조회
         Member member = memberRepository.findOne(memberId);
-        Item item = itemRepository.<Item>findOne(itemId)
+        Item item = itemRepository.<Item>findById(itemId)
                 .orElseThrow();
 
         // 배송정보 생성  (원래는 배송정보도 따로 입력받아야함)
@@ -51,8 +51,9 @@ public class OrderService {
     }
     // 검색
     // TODO: 2022-06-19 없는 경우, 예외처리
-    public List<Order> searchOrders (OrderSearch orderSearch) {
+    public List<Order> findOrders (OrderSearch orderSearch) {
         return orderRepository.findAll(orderSearch);
     }
+
 
 }
