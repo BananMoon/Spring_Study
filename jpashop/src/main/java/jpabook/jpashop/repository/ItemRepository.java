@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface ItemRepository<T extends Item> extends JpaRepository<T, Long> {
-    Optional<T> findOne(Long itemId);
+    Optional<T> findById(Long itemId);
     /*final EntityManager em;
 
     public void save(Item item) {

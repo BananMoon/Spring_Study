@@ -2,6 +2,7 @@ package jpabook.jpashop.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.dto.SimpleOrderDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -9,14 +10,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import static org.springframework.util.StringUtils.*;
+import static org.springframework.util.StringUtils.hasText;
 
 @Repository
 @RequiredArgsConstructor
-public class OrderRepository {
+public class OrderRepositoryV1 {
     private final EntityManager em;
     private final JPAQueryFactory query;
 
@@ -96,11 +96,14 @@ public class OrderRepository {
         return query.getResultList();
     }
 
-    /**
-     * QueryDsl로 작성한 주문 검색 기능
-     */
-    public List<Order> findAll(OrderSearch orderSearch) {
-//        query.select()
-        return Collections.emptyList();
+    public List<Order> findAllWithMemberDelivery() {
+        return em.createQuery("select o from Order o" +
+                " join fetch o.member m" +
+                " join fetch o.delivery d", Order.class
+        ).getResultList();
+    }
+
+    public List<SimpleOrderDto> findOrderDtos() {
+
     }
 }
