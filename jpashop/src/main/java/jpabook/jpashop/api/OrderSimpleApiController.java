@@ -1,13 +1,18 @@
 package jpabook.jpashop.api;
 
+import jpabook.jpashop.controller.OrderController;
+import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.dto.SimpleOrderDto;
+import jpabook.jpashop.domain.OrderStatus;
+import jpabook.jpashop.dto.SimpleOrderQueryDto;
 import jpabook.jpashop.repository.OrderRepositoryV1;
 import jpabook.jpashop.repository.OrderSearch;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,17 +70,36 @@ public class OrderSimpleApiController {
      * 이때는 LAZY 를 무시하고 직접 데이터를 가져온다.
      */
     @GetMapping("/api/v3/simple-orders")
-    public List<SimpleOrderDto> orderV3() {
+    public List<SimpleOrderDto> ordersV3() {
         List<Order> orders = orderRepository.findAllWithMemberDelivery();
         return orders.stream().map(o -> new SimpleOrderDto(o))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * v3과 v4 비교 시, 트레이드 오프가 있음.
+     * v3: 재사용성 o -> 다른 곳에서도 해당 엔티티를 호출할 수 있다.
+     * v4: 즉시 DTO로 반환하만 특정 DTO로만 조회되므로 재사용성이 떨어진다.
+     */
     @GetMapping("/api/v4/simple-orders")
-    public List<SimpleOrderDto> orderV4() {
-        orderRepository.findOrderDtos();
-        // 작성중
-        return null;
+    public List<SimpleOrderQueryDto> ordersV4() {
+        return orderRepository.findOrderDtos();
     }
 
+    @Data
+    static class SimpleOrderDto {
+        private Long orderId;
+        private String name;
+        private LocalDateTime orderDate;
+        private OrderStatus orderStatus;
+        private Address address;
+        // 중요하지 않은 Entity에서 중요한 Entity로의 의존은 ㄱㅊ
+        public SimpleOrderDto(Order order) {
+            orderId = order.getId();
+            name = order.getMember().getName();     /* LAZY 초기화 */
+            orderDate = order.getOrderDate();
+            orderStatus = order.getStatus();
+            address = order.getDelivery().getAddress();     /* LAZY 초기화 */
+        }
+    }
 }
