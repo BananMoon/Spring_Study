@@ -1,7 +1,9 @@
 spring:
   # database connection set
+  # first try: jdbc:h2:~/jpashop
+  # after: jdbc:h2:tcp://localhost/~/jpashop
   datasource:
-    url: jdbc:h2:tcp://localhost/~/jpashop
+    url: jdbc:h2:tcp://localhost/~/h2/jpashop
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -16,7 +18,7 @@ spring:
       hibernate:
 #        show_sql: true  # print using 'System.out.print()'
         format_sql: true
-
+    database-platform: org.hibernate.dialect.H2Dialect  # default인데 오류 발생
   h2:
     console:
       enabled: true
