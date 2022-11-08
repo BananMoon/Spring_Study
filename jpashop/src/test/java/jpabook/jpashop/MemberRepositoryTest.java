@@ -2,7 +2,7 @@ package jpabook.jpashop;
 
 import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.Member;
-import jpabook.jpashop.repository.MemberRepository;
+import jpabook.jpashop.repository.MemberRepositoryV2;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,27 +16,29 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 public class MemberRepositoryTest {
     @Autowired
-    MemberRepository memberRepository;
+    MemberRepositoryV2 memberRepository;
     
     @Test
-    @Transactional  // EntityManager를 통해 데이터 변경 시 트랜잭션 내에서 이뤄져야함.
-    @Rollback(false)    // test에 Transactional이 붙으면 Rollback되므로 false하면 Rollback안되고 commit됨.
+    @Transactional      /* EntityManager를 통해 데이터 변경 시 트랜잭션 내에서 이뤄져야함. */
+    @Rollback(false)    /* test에 Transactional이 붙으면 Rollback되므로 false하면 Rollback안되고 commit됨. */
     public void testMember() {
         //given
-        Member member = new Member("moonz", new Address("화성시","동탄대로 2길", "19"));
-//        member.setUsername("moonz");
+        Member member = Member.builder()
+                .name("moonz")
+                .address(new Address("화성시","동탄대로 2길", "19"))
+                .build();
 
         //when
-        Long saveId = memberRepository.save(member);
-        Member findMember = memberRepository.findOne(saveId);
+        Member savedMember = memberRepository.save(member);
 
         //then
-        Assertions.assertThat(findMember.getId()).isEqualTo(member.getId());
-        Assertions.assertThat(findMember.getName()).isEqualTo(member.getName());
-        Assertions.assertThat(findMember).isEqualTo(member);    // 같은 영속성 컨텍스트 내 1차 캐시에서 식별자로 가져옴
+        Assertions.assertThat(savedMember.getId()).isEqualTo(member.getId());
+        Assertions.assertThat(savedMember.getName()).isEqualTo(member.getName());
+        Assertions.assertThat(savedMember).isEqualTo(member);    /* 같은 영속성 컨텍스트 내 1차 캐시에서 식별자로 가져옴 */
     }
 }
-// 영속성 컨텍스트는 엔티티를 연구 저장하는 환경입니다.
+
+// 영속성 컨텍스트는 엔티티를 연구 저장하는 환경이다.
 // 애플리케이션과 DB 사이에서 객체를 보관하는 가상의 DB 역할을 하는데,
 // Entity Manager를 통해 entity를 저장하거나 조회하면, 이를 영속성 컨텍스트에 보관하고 관리합니다.
 // em.persist(엔티티);

@@ -1,6 +1,6 @@
 package jpabook.jpashop.service;
 
-import jpabook.jpashop.repository.MemberRepository;
+import jpabook.jpashop.repository.MemberRepositoryV2;
 import jpabook.jpashop.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor    // final 키워드 붙은 필드에 대해 적용
 @Transactional(readOnly = true)// JPA의 모든 데이터 변경은 트랜잭션 내에서 처리되어야함. (from Spring)
 public class MemberService {
-    private final MemberRepository memberRepository;
+    private final MemberRepositoryV2 memberRepository;
 
     // 회원 가입
     @Transactional  // 재 설정
@@ -39,8 +39,11 @@ public class MemberService {
     }
     @Transactional(readOnly = true)
     public Member findOne(Long memberId) {
-        return memberRepository.findOne(memberId);
+        return memberRepository.findById(memberId).get();    /* 원래는 orElseThrow()를 통해 예외 처리함. */
     }
 
-
+    public void update(Long id, String name) {
+        Member foundMember = memberRepository.findById(id).get();   /* 원래는 orElseThrow()를 통해 예외 처리함. */
+        foundMember.setName(name);
+    }
 }
