@@ -3,8 +3,8 @@ package jpabook.jpashop.service;
 import jpabook.jpashop.domain.*;
 import jpabook.jpashop.domain.item.Item;
 import jpabook.jpashop.repository.ItemRepository;
-import jpabook.jpashop.repository.MemberRepository;
-import jpabook.jpashop.repository.OrderRepository;
+import jpabook.jpashop.repository.MemberRepositoryV2;
+import jpabook.jpashop.repository.OrderRepositoryV1;
 import jpabook.jpashop.repository.OrderSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,8 +16,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class OrderService {
-    private final OrderRepository orderRepository;
-    private final MemberRepository memberRepository;
+    private final OrderRepositoryV1 orderRepository;
+    private final MemberRepositoryV2 memberRepository;
     private final ItemRepository<Item> itemRepository;
     /**
     주문
@@ -25,7 +25,7 @@ public class OrderService {
     @Transactional
     public Long order(Long memberId, Long itemId, int count) {
         // 엔티티 조회
-        Member member = memberRepository.findOne(memberId);
+        Member member = memberRepository.findById(memberId).get();
         Item item = itemRepository.<Item>findById(itemId)
                 .orElseThrow();
 
@@ -52,7 +52,7 @@ public class OrderService {
     // 검색
     // TODO: 2022-06-19 없는 경우, 예외처리
     public List<Order> findOrders (OrderSearch orderSearch) {
-        return orderRepository.findAll(orderSearch);
+        return orderRepository.findAllByJPQL(orderSearch);
     }
 
 

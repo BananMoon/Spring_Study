@@ -6,7 +6,7 @@ import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.domain.item.Book;
 import jpabook.jpashop.exception.NotEnoughStockException;
-import jpabook.jpashop.repository.OrderRepository;
+import jpabook.jpashop.repository.OrderRepositoryV1;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
 public class OrderServiceTest {
     @Autowired EntityManager em;
     @Autowired OrderService orderService;
-    @Autowired OrderRepository orderRepository;
+    @Autowired OrderRepositoryV1 orderRepository;
     @Test
     public void 상품주문() throws Exception {
         //given
@@ -83,7 +83,10 @@ public class OrderServiceTest {
     }
 
     private Member createMember(String name, Address address) {
-        Member member = new Member(name, address);
+        Member member = Member.builder()
+                .name(name)
+                .address(address)
+                .build();
         em.persist(member);
         return member;
     }
