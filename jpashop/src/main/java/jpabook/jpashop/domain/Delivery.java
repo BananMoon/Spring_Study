@@ -1,9 +1,10 @@
 package jpabook.jpashop.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
+@NoArgsConstructor
 @Entity
 @Getter
 public class Delivery {
