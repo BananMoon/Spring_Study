@@ -1,13 +1,14 @@
 package jpabook.jpashop.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
+@NoArgsConstructor
 @Entity
 @Table(name = "orders")
 @Getter
@@ -17,7 +18,7 @@ public class Order {
     private Long id;
 
     @ManyToOne(fetch=FetchType.LAZY)  // Order:Member. ManyToOne은 디폴트가 EAGER이므로 주의!
-    @JoinColumn(name="member_id")   // 연관관계맺는 칼럼
+    @JoinColumn(name="member_id")   // 연관관계 맺는 칼럼
     private Member member;
 
     // cascade = CascadeType.ALL 옵션 아래 설명 참고!

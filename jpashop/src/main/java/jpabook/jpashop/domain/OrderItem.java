@@ -1,7 +1,6 @@
 package jpabook.jpashop.domain;
 
 import jpabook.jpashop.domain.item.Item;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +9,7 @@ import javax.persistence.*;
 // 조인 테이블
 @Entity
 @Getter
+@NoArgsConstructor
 public class OrderItem {
     @Id @GeneratedValue
     @Column(name="order_item_id")
