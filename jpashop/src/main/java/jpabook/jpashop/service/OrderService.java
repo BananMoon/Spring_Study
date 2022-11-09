@@ -24,19 +24,19 @@ public class OrderService {
      */
     @Transactional
     public Long order(Long memberId, Long itemId, int count) {
-        // 엔티티 조회
+        /* 엔티티 조회 */
         Member member = memberRepository.findById(memberId).get();
-        Item item = itemRepository.<Item>findById(itemId)
+        Item item = itemRepository.findById(itemId)
                 .orElseThrow();
 
-        // 배송정보 생성  (원래는 배송정보도 따로 입력받아야함)
+        /* 배송정보 생성  (원래는 배송정보도 따로 입력받아야함) */
         Delivery delivery = new Delivery(member.getAddress(), DeliveryStatus.READY);
 
-        // 주문상품 생성 
+        /* 주문상품 생성 */
         // TODO: 2022-06-19 한개만 넘기도록 제약을 두었음. (그 이상으로도 상품 선택하도록 해보자) 
         OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), count);
         Order order = Order.createOrder(member, delivery, orderItem);
-        // 주문 저장 (cascade 옵션으로 자동으로 함께 persist됨)
+        /* 주문 저장 (cascade 옵션으로 자동으로 함께 persist됨) */
         orderRepository.save(order);
         return order.getId();
     }
@@ -46,14 +46,11 @@ public class OrderService {
     @Transactional
     public void cancelOrder (Long orderId) {
         Order order = orderRepository.findOne(orderId);
-//        if (order == null) throw new OrderNotFoundException();
         order.cancelOrder();
     }
-    // 검색
-    // TODO: 2022-06-19 없는 경우, 예외처리
+    /* 검색 */
     public List<Order> findOrders (OrderSearch orderSearch) {
-        return orderRepository.findAllByJPQL(orderSearch);
+//        return orderRepository.findAllByJPQL(orderSearch);
+        return orderRepository.findAll(orderSearch);    /* QueryDsl 사용 */
     }
-
-
 }
