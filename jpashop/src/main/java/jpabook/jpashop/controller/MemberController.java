@@ -32,7 +32,10 @@ public class MemberController {
             return "members/createMemberForm";  // Spring이 memberForm과 BindingResult까지 함께 Form에 전달하도록 함.
         }
         Address address = memberForm.createAddress();
-        Member member = new Member(memberForm.getName(), address);
+        Member member = Member.builder()
+                .name(memberForm.getName())
+                .address(address)
+                .build();
         memberService.join(member);
         return "redirect:/";  //재로딩되기보단 폼에게 1번째 페이지로 리다이렉트
     }

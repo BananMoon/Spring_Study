@@ -2,6 +2,7 @@ package jpabook.jpashop.service;
 
 import jpabook.jpashop.controller.ItemForm;
 import jpabook.jpashop.domain.item.Book;
+import jpabook.jpashop.domain.item.Item;
 import jpabook.jpashop.exception.ItemNotFoundException;
 import jpabook.jpashop.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 // Repository에게 위임하는 단계
 @Service
@@ -45,7 +47,7 @@ public class BookService implements ItemService{
 
     @Transactional
     public void updateItem(Long itemId, Book param) {
-        Book findItem = bookRepository.findOne(itemId)
+        Book findItem = bookRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException("Book Not Found Exception"));
         findItem.update(param.getPrice(), param.getName(), param.getStockQuantity());
     }

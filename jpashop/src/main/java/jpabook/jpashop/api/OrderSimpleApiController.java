@@ -37,7 +37,9 @@ public class OrderSimpleApiController {
         },
         ..
       }
-     2. Entity에서 필드에 지정한 Lazy로딩 전략으로 인해 문제 발생
+     2. Entity에서 필드에 지정한 Lazy로딩 전략으로 인해 문제 발생 : HttpMessageNotWritableException
+        - Lazy로딩 전략으로 인해 Order 조회 시 연관 객체는 프록시로 세팅되어있어 해당 객체를 JSON화하지 못하는 문제 발생
+        -> Hibernate5Module 라이브러리 사용해서 해결 가능하지만 비추!
      */
     @GetMapping("/api/v1/simple-orders")
     public List<Order> ordersV1() {
@@ -60,6 +62,7 @@ public class OrderSimpleApiController {
     @GetMapping("/api/v2/simple-orders")
     public List<SimpleOrderDto> ordersV2() {
         List<Order> allOrders = orderRepository.findAllByJPQL(new OrderSearch());
+        /* LAZY 초기화가 진행되서 쿼리 N+1번 호출 */
         return allOrders.stream()
                 .map(o -> new SimpleOrderDto(o))
                 .collect(Collectors.toList());
