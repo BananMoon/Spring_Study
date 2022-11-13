@@ -34,13 +34,16 @@ public class ItemForm {
     private String actor;
 
     public Item toEntity() {
+        return Book.createBook(author, isbn, name, price, stockQuantity);
+/*
         switch(itemType) {
             case ALBUM : return Album.createAlbum(artist, etc, name, price, stockQuantity);
             case BOOK: return Book.createBook(author, isbn, name, price, stockQuantity);
             case MOVIE: return Movie.createMovie(director, actor, name, price, stockQuantity);
         }
+*/
         // 에러 발생!
-        throw new UnsupportedOperationException("해당하는 상품이 존재하지 않습니다.");
+//        throw new UnsupportedOperationException("해당하는 상품이 존재하지 않습니다.");
     }
     @Builder
     ItemForm(Long id, String name, int price, int stockQuantity, ItemType itemType,
