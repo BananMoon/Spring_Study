@@ -18,6 +18,7 @@ spring:
       hibernate:
 #        show_sql: true  # print using 'System.out.print()'
         format_sql: true
+        default_batch_fetch_size: 100
     database-platform: org.hibernate.dialect.H2Dialect  # default인데 오류 발생
   h2:
     console:

@@ -219,3 +219,29 @@ order_id  order_item_id
 
 ### 6. 일대다 관계에서 컬렉션 패치 조인은 1개만 사용할 수 있다. 즉, 1:N:M 관계로 2개 이상의 패치조인이 불가능하다.
 데이터가 중복되기도 하지만, 정합성이 안 맞는 문제가 발생한다.
+
+### 7.yml 설정 파일에 옵션 `spring.jpa.properties.hibernate.default_batch_fetch_size`까지 설정하면, 일대다 관계로 인한 지연 로딩 조회 시 지정한 사이즈만큼 pk 기준 in 쿼리를 날려서조회할 수 있다.
+
+만약 데이터가 1000개 있고, `default_batch_fetch_size=100`으로 설정했다면 총 10번의 쿼리만 전송할 수 있다.
+현재 예제에서는 데이터 갯수가 모두 100개 이하이기 때문에 일대다 관계인 객체 조회 시 1:1:1로 쿼리가 전송된 것을 확인할 수 있다.
+결국 일대다 관계에서 1:N:M -> 1:1:1로 성능을 최적화한 것이다.
+```sql
+-- order_item 조회 시 pk(order_id)로 in 쿼리 조회 
+select orderitems0_.order_id as order_id5_5_1_, orderitems0_.order_item_id as order_it1_5_1_, orderitems0_.order_item_id as order_it1_5_0_, orderitems0_.count as count2_5_0_, orderitems0_.item_id as item_id4_5_0_, orderitems0_.order_id as order_id5_5_0_, orderitems0_.order_price as order_pr3_5_0_ from order_item orderitems0_ where orderitems0_.order_id in (4, 11);
+-- item 조회 시 pk(item_id)로 in 쿼리 조회 
+select item0_.item_id as item_id2_3_0_, item0_.name as name3_3_0_, item0_.price as price4_3_0_, item0_.stock_quantity as stock_qu5_3_0_, item0_.artist as artist6_3_0_, item0_.etc as etc7_3_0_, item0_.author as author8_3_0_, item0_.isbn as isbn9_3_0_, item0_.actor as actor10_3_0_, item0_.director as directo11_3_0_, item0_.dtype as dtype1_3_0_ from item item0_ where item0_.item_id in (2, 3, 9, 10);
+```
+
+추가) 디테일하게 배치 사이즈 설정하려면, `@BatchSize` 애노테이션 사용하자.
+```java
+    @BatchSize(size = 1000)
+    @OneToMany(mappedBy="order", cascade= CascadeType.ALL)
+    private List<OrderItem> orderItems = new ArrayList<>();
+```   
+
+> 주의할 점!!!<br>
+`default_batch_fetch_size` 의 크기는 적당한 사이즈를 골라야 하는데, 100~1000 사이를 권장한다.<br>
+어떤 db는 in절 파라미터 수를 최대 1000까지 제한하는 경우도 있기 때문이다.<br>
+=> size가 클수록, 쿼리 수는 줄지만 한번에 1000개를 db에서 애플리케이션으로 전달하므로 db에 순간 부하가 문제될 수 있고<br>
+=> size가 작을수록, 쿼리 수가 많아진다는 문제가 있다.<br>
+어떻게 하든 전체 데이터를 모두 가져와야 하므로 메모리의 사용량은 동일하다. 결국 db나 애플리케이션이 부하를 어느정도까지 견딜 수 있냐에 따라 조정해야 한다.
