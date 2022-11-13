@@ -1,10 +1,12 @@
 package jpabook.jpashop.repository;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.dto.SimpleOrderDto;
-import lombok.RequiredArgsConstructor;
+import jpabook.jpashop.domain.OrderStatus;
+import jpabook.jpashop.dto.SimpleOrderQueryDto;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -12,13 +14,19 @@ import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jpabook.jpashop.domain.QMember.member;
+import static jpabook.jpashop.domain.QOrder.order;
 import static org.springframework.util.StringUtils.hasText;
 
 @Repository
-@RequiredArgsConstructor
 public class OrderRepositoryV1 {
     private final EntityManager em;
     private final JPAQueryFactory query;
+
+    public OrderRepositoryV1(EntityManager em) {
+        this.em = em;
+        query = new JPAQueryFactory(em);
+    }
 
     public void save(Order order) {
         em.persist(order);
@@ -96,6 +104,42 @@ public class OrderRepositoryV1 {
         return query.getResultList();
     }
 
+    /* QueryDsl 사용
+    * - SQL(JPQL)과 모양이 유사하면서 자바 코드로 동적 쿼리를 편하게 쓸 수 있는 오픈 소스.
+    * - JPQL을 코드로 만드는 빌더 역할
+    *
+    * 장점
+    * - 컴파일 타임에 에러 체크 가능
+    * - JPQL의 net 명령어와 달리 깔금한 DTO 조회 지원
+    *   - V4에서 진행했던 findOrderItemMap 메서드 : dto로 조회하기 위해 코드 안에서 생성자를 호출
+    *   - why? QueryDsl이 자동으로 setter/생성자/필드를 이용해서 생성해주기 때문에 DTO를 사용하기 편리.
+    * - condition 등 재사용성이 높다.
+     * -
+     */
+    public List<Order> findAll(OrderSearch orderSearch) {
+        // JPAQueryFactory query = new JPAQueryFactory(em);
+        return query.select(order)
+                .from(order)
+                .join(order.member, member)
+                .where(statusEq(orderSearch.getOrderStatus()), /* null인 경우 해당 조건을 사용하지 않음. */
+                        nameLike(orderSearch.getMemberName()))
+                .limit(1000)
+                .fetch();
+    }
+
+    private BooleanExpression nameLike(String memberName) {
+        if (!StringUtils.hasText(memberName)) {
+            return null;
+        }
+        return order.member.name.like(memberName);
+    }
+
+    private BooleanExpression statusEq(OrderStatus statusCond) {
+        if (statusCond == null) {
+            return null;
+        }
+        return order.status.eq(statusCond);
+    }
     public List<Order> findAllWithMemberDelivery() {
         return em.createQuery("select o from Order o" +
                 " join fetch o.member m" +
@@ -103,7 +147,46 @@ public class OrderRepositoryV1 {
         ).getResultList();
     }
 
-    public List<SimpleOrderDto> findOrderDtos() {
+    /*
+    - new 명령어를 사용해서 JPQL의 결과를 DTO로 즉시 변환
+    - 애플리케이션 네트워크 용량 최적화 (a little bit)é
+    - 재사용성 저하
+    - API 스펙에 맞춘 코드가 레파지토리에 들어간 문제
+    - DTO를 조회할 때는 fetch join을 사용할 수 없다. 오로지 엔티티에만 사용 가능.
+     */
+    public List<SimpleOrderQueryDto> findOrderDtos() {
+        return em.createQuery(
+                "select new jpabook.jpashop.dto.SimpleOrderQueryDto(o.id, m.name, o.orderDate, o.status, d.address)" +
+                        " from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", SimpleOrderQueryDto.class
+        ).getResultList();
+    }
 
+    /**
+     * JPA에서의 distinct 기능 : SQL 문에 distinct 추가 + 조회된 객체값 일치하면 중복 제거
+     * 1. SQL 문의 distinct 기능(모든 칼럼이 같은 데이터의 중복 제거)
+     * 2. 애플리케이션 단에 와서 JPA가 객체의 참조값이 같으면 중복을 제거하도록 동작한다.
+     */
+    public List<Order> findAllWithItem() {
+        return em.createQuery(
+                "select distinct o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d" +
+                        " join fetch o.orderItems oi" +
+                        " join fetch oi.item", Order.class)
+                .getResultList();
+    }
+
+    /* 사실 XToOne 관계의 객체들은 따로 패치조인하지 않으면, 마찬가지로 두개(member, delivery)의 쿼리가 더 나가지만 in 쿼리로 조회된다.
+       하지만 네트워크를 더 타게 되는 문제가 있으므로, XToOne에 대해서는 패치 조인을 해주는 것을 권장.
+     */
+    public List<Order> findAllWithMemberDelivery(int offset, int limit) {
+        return em.createQuery("select o from Order o" +
+                " join fetch o.member m" +
+                " join fetch o.delivery d", Order.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
     }
 }
