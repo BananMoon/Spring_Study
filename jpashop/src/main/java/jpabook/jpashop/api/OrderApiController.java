@@ -6,6 +6,8 @@ import jpabook.jpashop.domain.OrderItem;
 import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.OrderRepositoryV1;
 import jpabook.jpashop.repository.OrderSearch;
+import jpabook.jpashop.repository.order.query.OrderQueryDto;
+import jpabook.jpashop.repository.order.query.OrderQueryRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderApiController {
     private final OrderRepositoryV1 orderRepository;
+    private OrderQueryRepository orderQueryRepository;
     /**
     - (본인 코드에는 반영X) Hibernate5Module을 이용해서 프록시를 강제 초기화한 값들만 값이 반환되도록 함.
     - 엔티티 직접 노출 -> 엔티티 변하면 API 스펙이 변하는 문제
@@ -46,7 +49,6 @@ public class OrderApiController {
      * 컬렉션 타입 Order를 조회해서 DTO로 변환하여 응답한다.
      * HttpMessageNotWritableException: Could not write JSON
      * -> OrderItem은 Lazy 전략이므로 실제 값이 들어오지 않는다. Hibernate5Module 이용하면 null값으로 반환된다.
-     *
      * <실행 쿼리>
      * Order 쿼리 1개로 결과 2개
      * - 각 Member(2명)에 대한 쿼리 2개, Delivery 쿼리 2개, OrderItem(list 원소 2개) 쿼리 2개
@@ -56,7 +58,7 @@ public class OrderApiController {
     @GetMapping("/api/v2/orders")
     public List<OrderDto> ordersV2() {
         List<Order> orders = orderRepository.findAllByJPQL(new OrderSearch());
-        return orders.stream().map(o-> new OrderDto(o))
+        return orders.stream().map(OrderDto::new)
                 .collect(Collectors.toList());
     }
 
@@ -78,7 +80,7 @@ public class OrderApiController {
         for (Order order : orders) {
             System.out.println("order ref = " + order + ", order id = " + order.getId());
         }
-        return orders.stream().map(o-> new OrderDto(o))
+        return orders.stream().map(OrderDto::new)
                 .collect(Collectors.toList());
     }
 
@@ -100,21 +102,26 @@ public class OrderApiController {
         for (Order order : orders) {
             System.out.println("order ref = " + order + ", order id = " + order.getId());
         }
-        return orders.stream().map(o-> new OrderDto(o)) /* Order가 2개 조회됐으니 2번 돌면서 Order_Item 2개 조회 */
+        return orders.stream().map(OrderDto::new) /* Order가 2개 조회됐으니 2번 돌면서 Order_Item 2개 조회 */
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/api/v4/orders")
+    public List<OrderQueryDto> ordersV4() {
+        return orderQueryRepository.findOrderQueryDto();
     }
 
     @Getter /* 생략할 경우, no properties 에러 발생함. */
     static class OrderDto {
-        private Long orderId;
-        private String name;
-        private LocalDateTime orderDate;
-        private OrderStatus orderStatus;
-        private Address address;
+        private final Long orderId;
+        private final String name;
+        private final LocalDateTime orderDate;
+        private final OrderStatus orderStatus;
+        private final Address address;
         /* 엔티티 사용
         private List<OrderItem> orderItems;
         */
-        private List<OrderItemDto> orderItems;
+        private final List<OrderItemDto> orderItems;
         public OrderDto(Order o) {
             orderId = o.getId();
             name = o.getMember().getName();
@@ -123,7 +130,7 @@ public class OrderApiController {
             address = o.getDelivery().getAddress();
             // orderItems = o.getOrderItems();     // Lazy 초기화 하지 않는 이상 프록시 객체.
             orderItems = o.getOrderItems().stream()
-                    .map(orderItem -> new OrderItemDto(orderItem))
+                    .map(OrderItemDto::new)
                     .collect(Collectors.toList());
 
         }
@@ -134,9 +141,9 @@ public class OrderApiController {
      */
     @Getter
     static class OrderItemDto {
-        private String itemName;
-        private int orderPrice;
-        private int count;
+        private final String itemName;
+        private final int orderPrice;
+        private final int count;
 
         public OrderItemDto(OrderItem orderItem) {
             itemName = orderItem.getItem().getName();
