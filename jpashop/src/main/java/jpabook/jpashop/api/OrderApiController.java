@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderApiController {
     private final OrderRepositoryV1 orderRepository;
-    private OrderQueryRepository orderQueryRepository;
+    private final OrderQueryRepository orderQueryRepository;
     /**
     - (본인 코드에는 반영X) Hibernate5Module을 이용해서 프록시를 강제 초기화한 값들만 값이 반환되도록 함.
     - 엔티티 직접 노출 -> 엔티티 변하면 API 스펙이 변하는 문제
@@ -109,6 +109,19 @@ public class OrderApiController {
     @GetMapping("/api/v4/orders")
     public List<OrderQueryDto> ordersV4() {
         return orderQueryRepository.findOrderQueryDto();
+    }
+
+    /**
+     * 컬렉션 조회 상황에서 N+1 문제 발생하는데, 이를 방지하는 V5.
+     * 조회하는 중심 DTO와 toMany 관계를 맺는 DTO를 조회할 때 쿼리가 데이터 갯수만큼 생성되지 않도록 한다.
+     * 어떻게? toMany 데이터들을 메모리 상에 올려서 연산을 하는 방식으로 수정한다.
+     * 결과: 쿼리 2번만으로 조회 완료. (Query: 루트 1번, 컬렉션 1번)
+     * 메모리 상에서는 Map을 이용해서 O(1)로 성능.
+     * 패치 조인보다 필요한 필드만을 조회할 수 있다는 장점. but 패치 조인을 사용하지 않기 때문에 조금 더 코드가 복잡해진다.
+     */
+    @GetMapping("/api/v5/orders")
+    public List<OrderQueryDto> ordersV5() {
+        return orderQueryRepository.findOrderQueryDto_optimization();
     }
 
     @Getter /* 생략할 경우, no properties 에러 발생함. */
