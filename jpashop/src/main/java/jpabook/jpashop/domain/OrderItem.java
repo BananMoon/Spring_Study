@@ -18,7 +18,7 @@ public class OrderItem {
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)  // OrderItem:Order (한 오더에 여러 오더아이템들). order 하나 조회하는데 모든 오더아이템이 조회되면 X
     @JoinColumn(name = "order_id")
-    private Order order;
+    private Order order;    /* db 상 FK이므로 바로 값을 가져온다. */
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
