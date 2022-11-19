@@ -50,7 +50,9 @@ public class OrderQueryRepository {
     }
 
     public List<OrderQueryDto> findOrderQueryDto_optimization() {
+        /* 루트(toOne) 조회 */
         List<OrderQueryDto> result = findOrders();
+        /* orderItem 컬렉션을 Map으로 조회 */
         List<Long> orderIds = toOrderIds(result);
         /* where 절에서 orderId를 1대1 매칭이 아닌 in 절로 수정 */
         Map<Long, List<OrderItemQueryDto>> orderItemMap = findOrderItemMap(orderIds);
@@ -67,6 +69,7 @@ public class OrderQueryRepository {
     }
 
     private Map<Long, List<OrderItemQueryDto>> findOrderItemMap(List<Long> orderIds) {
+        /* 1:N 데이터 조회 */
         List<OrderItemQueryDto> orderItems = em.createQuery(
                         "select new jpabook.jpashop.repository.order.query.OrderItemQueryDto(oi.order.id, i.name, oi.orderPrice, oi.count)" +
                                 " from OrderItem oi" +
@@ -74,9 +77,27 @@ public class OrderQueryRepository {
                                 " on oi.order.id in :orderIds", OrderItemQueryDto.class)
                 .setParameter("orderIds", orderIds)
                 .getResultList();
-        /* 메모리 상에서 매칭하여 값 세팅 */
+        /* 메모리 상에서 같은 orderId끼리 묶어 key=orderId, value=DTO인 Map 생성 */
         Map<Long, List<OrderItemQueryDto>> orderItemMap = orderItems.stream()
                 .collect(Collectors.groupingBy(OrderItemQueryDto::getOrderId));
         return orderItemMap;
+    }
+
+    /**
+     * 장점 : 한 번의 쿼리로 조회된다.
+     * 단점 : join 시 1대N에서 N에 맞춰 데이터가 조회됨. 그래서 페이징이 불가함.(페이징 조회 시 1에 맞춰 조회할 수 없음)
+     */
+    public List<OrderFlatDto> findOrderQueryDto_flat() {
+        return em.createQuery(
+                "select new" +
+                        " jpabook.jpashop.repository.order.query.OrderFlatDto(o.id, m.name, o.orderDate, o.status, d.address, i.name, oi.orderPrice, oi.count)" +
+                        " from Order o" +
+                        " join o.member m" +
+                        " join o.delivery d" +
+                        " join o.orderItems oi" +
+                        " join oi.item i", OrderFlatDto.class)
+                .getResultList();
+
+
     }
 }

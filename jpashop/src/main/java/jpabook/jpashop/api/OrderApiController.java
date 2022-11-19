@@ -6,6 +6,8 @@ import jpabook.jpashop.domain.OrderItem;
 import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.OrderRepositoryV1;
 import jpabook.jpashop.repository.OrderSearch;
+import jpabook.jpashop.repository.order.query.OrderFlatDto;
+import jpabook.jpashop.repository.order.query.OrderItemQueryDto;
 import jpabook.jpashop.repository.order.query.OrderQueryDto;
 import jpabook.jpashop.repository.order.query.OrderQueryRepository;
 import lombok.Getter;
@@ -16,7 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
+import static java.util.stream.Collectors.*;
 
 /*
 컬렉션 조회 (OneToMany) 최적화
@@ -59,7 +62,7 @@ public class OrderApiController {
     public List<OrderDto> ordersV2() {
         List<Order> orders = orderRepository.findAllByJPQL(new OrderSearch());
         return orders.stream().map(OrderDto::new)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     /**
@@ -81,7 +84,7 @@ public class OrderApiController {
             System.out.println("order ref = " + order + ", order id = " + order.getId());
         }
         return orders.stream().map(OrderDto::new)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     /*
@@ -103,7 +106,7 @@ public class OrderApiController {
             System.out.println("order ref = " + order + ", order id = " + order.getId());
         }
         return orders.stream().map(OrderDto::new) /* Order가 2개 조회됐으니 2번 돌면서 Order_Item 2개 조회 */
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     @GetMapping("/api/v4/orders")
@@ -124,6 +127,33 @@ public class OrderApiController {
         return orderQueryRepository.findOrderQueryDto_optimization();
     }
 
+    /**
+     * - 1차. 쿼리 1개 생성으로 완성됐지만, N 객체에 맞춰 조회되기 때문에 중복 데이터가 조회된다.
+     * + OrderQueryDto로 반환하는 스펙을 어기게 된다. (OrderFlatDto로 반환..)
+     * - 2차(해결): N에 맞춰 조회된 결과에 대해 메모리 상에서!! key:OrderQueryDto와 value:OrderItemQueryDto로 매핑한 후,
+     * 하나의 OrderQueryDto Set 타입 객체로 다.
+     *
+     * - 단점
+     * 애플리케이션에서 추가 작업이 크다.
+     * 쿼리는 1개지만, 조인으로 인해 조회 시 중복 데이터가 추가되는 문제가 있어 데이터 갯수가 큰 경우 문제이다.
+     */
+    @GetMapping("/api/v6/orders")
+    public List<OrderQueryDto> ordersV6() {
+        List<OrderFlatDto> flats = orderQueryRepository.findOrderQueryDto_flat();
+
+        /* collect(groupingBy(key값, value값:mapping(묶기, 결과형태)))
+           => Order(DTO)가 key, OrderItem(DTO)가 value인 MAP     */
+        Map<OrderQueryDto, List<OrderItemQueryDto>> orderQueryMap = flats.stream()
+                .collect(groupingBy(
+                        f -> new OrderQueryDto(f.getOrderId(), f.getName(), f.getOrderDate(), f.getOrderStatus(), f.getAddress()),  /* key */
+                        mapping(f -> new OrderItemQueryDto(f.getOrderId(), f.getItemName(), f.getOrderPrice(), f.getCount()), toList()) /* value */
+                ));
+        /* map을 entrySet으로 만든 후 OrderQueryDto List타입으로 변환 */
+        return orderQueryMap.entrySet().stream()
+                .map(m -> new OrderQueryDto(m.getKey().getOrderId(), m.getKey().getName(), m.getKey().getOrderDate(), m.getKey().getOrderStatus(), m.getKey().getAddress(),
+                        m.getValue()))
+                .collect(toList());
+    }
     @Getter /* 생략할 경우, no properties 에러 발생함. */
     static class OrderDto {
         private final Long orderId;
@@ -144,7 +174,7 @@ public class OrderApiController {
             // orderItems = o.getOrderItems();     // Lazy 초기화 하지 않는 이상 프록시 객체.
             orderItems = o.getOrderItems().stream()
                     .map(OrderItemDto::new)
-                    .collect(Collectors.toList());
+                    .collect(toList());
 
         }
     }
