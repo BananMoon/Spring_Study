@@ -11,9 +11,9 @@
 - 강좌 : 인프런, <i>실전! 스프링 부트와 JPA 활용 2 - API 개발과 성능 최적화</i>([링크](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8-JPA-API%EA%B0%9C%EB%B0%9C-%EC%84%B1%EB%8A%A5%EC%B5%9C%EC%A0%81%ED%99%94#))
 - 학습
   - API 개발
-  - JPA 조회 성능 최적화
-  - 성능 튜닝
-  - 실무 JPA 성능 문제 해결
+  - JPA 조회 성능 문제 해결 및 최적화
+    - 엔티티 및 DTO 조회
+    - 컬렉션 조회
 
 ### 4. core
 ### 5. blog
