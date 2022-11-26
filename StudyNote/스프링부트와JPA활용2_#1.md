@@ -86,3 +86,121 @@ Jpa객체의 메서드 ex) findAllByXXX(~) 로 조회하는 것은 다르다.
 ---
 
 ## 6. Lazy 로딩으로 인한 많은 쿼리 호출 문제 
+
+### 성능 개선 1) 패치 조인(Fecth Join)
+Order 조회 시 LAZY를 무시하고 한번에 Member와 Delivery 데이터를 조인해서 가져온다.
+JPA에만 있는 문법으로, 엔티티 조회 시 성능 최적화를 위해 사용한다.
+
+- 패치조인과 일반 조인 차이점
+  ```
+  1. 영속화 대상
+  일반 조인은 조인 대상 엔티티는 영속화되지 않는다.
+  패치 조인은 select 대상의 엔티티뿐만 아니라 조인의 대상까지 영속화하여 가져온다.
+
+  2. 조인 대상에 대한 쿼리문 발생
+  일반 조인은 연관 엔티티를 프록시로 가져오고, 연관 엔티티의 필드까지 조회할 때 추가 쿼리문이 발생한다.
+  패치 조인은 연관 엔티티의 필드까지 함께 조인하여 추가 쿼리문을 발생시키지 않는다.
+  => 일반 조인은 연관 엔티티가 검색 조건에 포함되고, 조회의 주체가 검색 엔티티뿐일 때 사용하면 좋다.
+  ```
+
+- 사용 예제 
+  - 코드
+  ```java
+  public List<Order> findAllWithMemberDelivery() {
+    return em.createQuery(
+      "select o from Order o" +
+      " join fetch o.member m" + 
+      " join fetch o.delivery d", Order.class)
+      .getResultList(); 
+    )
+  }
+  ```
+  - 생성된 쿼리문
+  ```sql
+  select
+        order0_.order_id as order_id1_9_0_,
+        member1_.member_id as member_i1_6_1_,
+        delivery2_.delivery_id as delivery1_4_2_,
+        order0_.delivery_id as delivery4_9_0_,
+        order0_.member_id as member_i5_9_0_,
+        order0_.order_date as order_da2_9_0_,
+        order0_.status as status3_9_0_,
+        member1_.city as city2_6_1_,
+        member1_.street as street3_6_1_,
+        member1_.zipcode as zipcode4_6_1_,
+        member1_.name as name5_6_1_,
+        delivery2_.city as city2_4_2_,
+        delivery2_.street as street3_4_2_,
+        delivery2_.zipcode as zipcode4_4_2_,
+        delivery2_.status as status5_4_2_ 
+    from
+        orders order0_ 
+    inner join
+        member member1_ 
+            on order0_.member_id=member1_.member_id 
+    inner join
+        delivery delivery2_ 
+            on order0_.delivery_id=delivery2_.delivery_id
+  ```
+- 패치 조인을 사용해서 쿼리 1번에 루트 엔티티와 연관 엔티티를 조회한다. (지연로딩이 설정되어있어도 지연로딩되지 않는다.)
+- 문제 : 위 sql문은 Entity를 그대로 조회하기 때문에 필요없는 필드까지 반환하게 된다. 
+이를 DTO로 조회되도록 개선하여 필요한 필드만 반환도록하여 성능 최적화할 수도 있다.
+
+### 성능 개선 2) DTO로 바로 반환하는 레파지토리 (using 패치 조인)
+엔티티가 아닌 필요한 필드들로 구성된 DTO만을 조회하므로 DB => 애플리케이션으로의 네트워크 용량이 최적화된다. 
+
+```
+성능 개선 많이 이루어질까?
+사실 요즘은 네트워크 성능 또한 좋아져서 미비하다.
+물론 고객 트래픽이 매우 많이 들어오는 API인데 데이터 크기가 너무 클 때(2-30개)는 고려해야하지만, 그렇지 않거나 어드민 API이면 큰 성능 개선은 볼 수 없다.
+```
+
+> 패치 조인(fetch join)은 엔티티 그래프를 한번에 같이 조회하기 위해 사용하는 기능이다.(select 절에 엔티티를 지정해야 한다.) 그래서 엔티티를 조회하지 않으면 패치 조인은 실패한다.
+
+- 사용 예제
+  - 코드
+  ```java
+  public List<SimpleOrderQueryDto> findOrderDtos() {
+      return em.createQuery("select new jpabook.jpashop.dto.SimpleOrderQueryDto(o.id, m.name, o.orderDate, o.status, d.address)" +
+        " from Order o" +
+        " join o.member m" +
+        " join o.delivery d", SimpleOrderQueryDto.class
+      ).getResultList();
+  }
+  ```
+  - 생성된 쿼리문
+  ```sql
+  select
+      order0_.order_id as col_0_0_,
+      member1_.name as col_1_0_,
+      order0_.order_date as col_2_0_,
+      order0_.status as col_3_0_,
+      delivery2_.city as col_4_0_,
+      delivery2_.street as col_4_1_,
+      delivery2_.zipcode as col_4_2_ 
+  from
+      orders order0_ 
+  inner join
+      member member1_ 
+  on order0_.member_id=member1_.member_id 
+  inner join
+      delivery delivery2_ 
+  on order0_.delivery_id=delivery2_.delivery_id
+  ```
+
+대부분 join이나, 혹은 where문에 걸리는 칼럼이 인덱스가 걸리지 않는 경우가 성능에 문제가 된다.
+(이를 제대로 판별하기 위해서는 성능 테스트가 필요하다.)
+
+단점도 있다.
+- 레파지토리 재사용성이 떨어지는 점
+- API 스펙에 맞춰진 코드가 레파지토리에 그대로 반영되는 점 (즉, 화면에 의존성이 있는 스펙이 레파지토리까지 반영된 것이다.)
+
+위 단점을 상쇄하는 방법이 있다.
+repository 패키지 아래에, DTO로 반환하는 레파지토리와 DTO를 묶는 하나의 패키지로 따로 생성한다.
+이렇게 함으로써 순수 엔티티를 반환하는 용도로 사용하는 기존 Repository와 분리함으로써 유지보수성이 더 좋아진다.
+- repository
+  - order.simplequery
+      - OrderSimpleQueryDto.java
+      - OrderSimpleQueryRepository.java
+  - 기존 Repository들..    
+
