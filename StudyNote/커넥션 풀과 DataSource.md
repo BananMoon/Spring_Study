@@ -37,3 +37,14 @@ JDBC 노트에서 살펴봤듯, 데이터베이스 커넥션을 획득할 때 �
 그리고 커넥션 획득 방법들마다 구현체를 만들어서 커넥션 획득 기술을 구현하도록 하였다.
 
 > 주의! 아쉽게도 `DriverManager`는 `DataSource` 인터페이스를 구현하지 않고 있기 때문에, 스프링에서는 `DataSource` 인터페이스를 구현하는 `DriverManagerDataSource` 클래스를 제공한다.
+
+
+## 버전 별 적용
+V0 : `DriverManager`로 커넥션 획득하고 개별 객체에 대해 close 구현
+- `DriverManagerDataSource`, `HikariDataSource` 등 구현체 연결
+
+V1 : `DataSource`(의존 관계 주입)와 `JdbcUtils` 를 이용해서 커넥션 획득과 끊기를 쉽게 구현
+- `MemberRepository`는 `DataSource`만 의존하고 있으면,<br>
+   해당 인스턴스를 생성할 때 인자로 어떤 구현체를 전달하냐에 따라 쉽게 바꿀 수 있다. `MemberRepository`의 코드는 바꿀 필요가 없게 된다.
+- 그래서 `DriverManagerDataSource`, 혹은 `HikariDataSource`로 쉽게 바꿀 수 있다.
+  - 이게 DI와 OCP(단일 책임 원칙)의 장점이다.
