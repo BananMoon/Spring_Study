@@ -10,6 +10,7 @@ import java.util.NoSuchElementException;
 
 /**
  * JDBC - DataSource 사용(DI), JdbcUtils 사용
+ * 추상화 -> dataSource 어떤 걸 사용하든 getConnection() 호출만 하면 된다.
  */
 @Slf4j
 public class MemberRepositoryV1 {
