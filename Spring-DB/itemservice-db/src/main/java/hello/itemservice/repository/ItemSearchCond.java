@@ -2,6 +2,9 @@ package hello.itemservice.repository;
 
 import lombok.Data;
 
+/**
+ * 아이템 조회 시 필터링 데이터(검색어)
+ */
 @Data
 public class ItemSearchCond {
 

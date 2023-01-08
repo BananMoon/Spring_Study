@@ -21,7 +21,7 @@ class ItemRepositoryTest {
 
     @AfterEach
     void afterEach() {
-        //MemoryItemRepository 의 경우 제한적으로 사용
+        //MemoryItemRepository에만 제한적으로 사용 (추후 실제 db를 사용하는 레파지토리의 경우 X)
         if (itemRepository instanceof MemoryItemRepository) {
             ((MemoryItemRepository) itemRepository).clearStore();
         }
@@ -85,8 +85,9 @@ class ItemRepositoryTest {
         test("itemA", 10000, item1);
     }
 
+    // 검색 조건에 따라 필터링된 조회결과가 예측한 item들과 일치하는지 체크
     void test(String itemName, Integer maxPrice, Item... items) {
         List<Item> result = itemRepository.findAll(new ItemSearchCond(itemName, maxPrice));
-        assertThat(result).containsExactly(items);
+        assertThat(result).containsExactly(items);  /* 순서까지 일치해야함 */
     }
 }
