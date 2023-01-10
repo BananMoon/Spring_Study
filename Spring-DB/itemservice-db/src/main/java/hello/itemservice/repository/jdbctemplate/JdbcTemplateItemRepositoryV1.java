@@ -73,7 +73,7 @@ public class JdbcTemplateItemRepositoryV1 implements ItemRepository {
         Integer maxPrice = cond.getMaxPrice();
         String sql = "select id, item_name, price, quantity from item";
         // 동적 쿼리 : 상황에 따라 적절한 쿼리를 생성해야 한다. (추후 다른 방식으로 접근해볼 예정)
-        // ~~
+        // 모든 상황에 대해 계산해서 동적 처리를 해주는 코드는 기하급수적으로 복잡해지기만 한다.
         
         List<Item> query = jdbcTemplate.query(sql, itemRowMapper());    /* 그냥 select하여 리스트로 값 조회 시, query() */
         return query;
