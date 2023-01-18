@@ -5,19 +5,32 @@ import hello.itemservice.repository.ItemSearchCond;
 import hello.itemservice.repository.ItemUpdateDto;
 import hello.itemservice.repository.memory.MemoryItemRepository;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@SpringBootTest // @SpringBootApplication 애노테이션을 찾아가서 그 설정 기반으로 하기 때문에 db config 또한 import된다.
 class ItemRepositoryTest {
 
     @Autowired
     ItemRepository itemRepository;
+
+    @Autowired
+    PlatformTransactionManager transactionManager;  // datasource와 transaction manager는 스프링이 자동으로 데이터 주입해준다.
+    TransactionStatus status;
+    @BeforeEach
+    void beforeEach() {
+        // 트랜잭션 시작
+        status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+    }
 
     @AfterEach
     void afterEach() {
@@ -25,6 +38,8 @@ class ItemRepositoryTest {
         if (itemRepository instanceof MemoryItemRepository) {
             ((MemoryItemRepository) itemRepository).clearStore();
         }
+
+        transactionManager.rollback(status);
     }
 
     @Test
