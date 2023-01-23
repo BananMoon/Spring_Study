@@ -32,6 +32,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	//H2 데이터베이스 추가 (클라이언트 라이브러리)
 	runtimeOnly 'com.h2database:h2'
+	// MyBatis 추가 : Spring이 공식적으로 관리하지 않아서 버전정보 별도 추가 필요 (MyBatis에서 만듦)
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.0'
 }
 
 tasks.named('test') {
