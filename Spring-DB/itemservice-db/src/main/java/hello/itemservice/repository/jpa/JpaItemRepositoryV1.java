@@ -14,15 +14,18 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * JPA 기반 Repository
+ */
 @Slf4j
 @Repository
 @Transactional(readOnly = true) // 일반적으로는 서비스 계층에서 트랜잭션을 건다.
-public class JpaItemRepository implements ItemRepository {
+public class JpaItemRepositoryV1 implements ItemRepository {
     // JPA는 EntityManager 의존관계 주입이 필요하다.
     // Spring이 EntityManagerFactory로 데이터 베이스 세팅하는 등을 자동 진해주고, 우리는 세팅된 EntityManager를 주입받아서 사용하기만 하면 된다.
     private final EntityManager em;
 
-    public JpaItemRepository(EntityManager em) {
+    public JpaItemRepositoryV1(EntityManager em) {
         this.em = em;
     }
 
