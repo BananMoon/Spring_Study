@@ -8,6 +8,7 @@ import hello.itemservice.repository.ItemRepository;
 import hello.itemservice.repository.ItemSearchCond;
 import hello.itemservice.repository.ItemUpdateDto;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
@@ -20,7 +21,9 @@ import static hello.itemservice.domain.QItem.item;
  * QueryDsl 사용하여 동적 쿼리문 작성
  * - JPQL을 만들어주는 빌더 역할
  * - EntityManager을 주입받은 JPAQueryFactory로 JPQL을 만들수 있다.
+ * + Service 계층에서 호출하지 않으므로 Repository 층에 @Transactional을 붙인다.
  */
+@Transactional(readOnly = true)
 @Repository
 public class JpaItemRepositoryV3 implements ItemRepository {
     private final EntityManager em;
@@ -31,12 +34,14 @@ public class JpaItemRepositoryV3 implements ItemRepository {
         this.factory = new JPAQueryFactory(em);
     }
 
+    @Transactional
     @Override
     public Item save(Item item) {
         em.persist(item);
         return item;
     }
 
+    @Transactional
     @Override
     public void update(Long itemId, ItemUpdateDto updateParam) {
         Item findItem = em.find(Item.class, itemId);
