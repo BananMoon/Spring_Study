@@ -6,6 +6,7 @@ import hello.itemservice.repository.ItemSearchCond;
 import hello.itemservice.repository.ItemUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,16 +16,19 @@ import java.util.Optional;
  * Service Layer는 구현체가 바뀔 일이 거의 없기 때문에 실무에서는 Service Layer는 인터페이스를 두지 않는다.
  */
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ItemServiceV1 implements ItemService {
 
     private final ItemRepository itemRepository;
 
+    @Transactional
     @Override
     public Item save(Item item) {
         return itemRepository.save(item);
     }
 
+    @Transactional
     @Override
     public void update(Long itemId, ItemUpdateDto updateParam) {
         itemRepository.update(itemId, updateParam);
