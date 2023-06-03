@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "orders") // order는 DB 예약어이므로
+@Table(name = "orders") // order는 DB 예약어이므로 's'
 @Getter
 @Setter
 public class Order {
