@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.*;
  */
 @Slf4j
 @SpringBootTest
-public class TxBasicTest {
+public class TxUsageBasicTest {
     @Autowired BasicService basicService;
 
     @Test
