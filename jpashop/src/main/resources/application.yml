@@ -3,10 +3,11 @@ spring:
   # first try: jdbc:h2:~/jpashop
   # after: jdbc:h2:tcp://localhost/~/jpashop
   datasource:
-    url: jdbc:h2:tcp://localhost/~/h2/jpashop
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    hikari:
+      jdbc-url: jdbc:h2:tcp://localhost:1521/jpashop
+      username: spring_user
+      password: spring_user
+      driver-class-name: org.h2.Driver
 
   jpa:
     hibernate:
