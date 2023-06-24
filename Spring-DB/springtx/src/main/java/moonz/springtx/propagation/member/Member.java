@@ -12,7 +12,7 @@ import javax.persistence.Id;
 @NoArgsConstructor  // JPA 스펙 위해 존재해야함.
 public class Member {
     @Id @GeneratedValue
-    private long id;
+    private Long id;
     private String username;
 
     public Member (String username) {

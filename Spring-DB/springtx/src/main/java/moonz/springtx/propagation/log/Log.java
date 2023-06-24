@@ -13,7 +13,7 @@ import javax.persistence.Id;
 public class Log {
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
     private String message;
 
     public Log (String message) {
