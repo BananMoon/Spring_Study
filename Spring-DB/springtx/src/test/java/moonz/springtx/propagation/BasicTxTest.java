@@ -1,6 +1,10 @@
 package moonz.springtx.propagation;
 
 import lombok.extern.slf4j.Slf4j;
+import moonz.springtx.propagation.log.LogRepository;
+import moonz.springtx.propagation.member.MemberRepository;
+import moonz.springtx.propagation.member.MemberService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +28,9 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest
 public class BasicTxTest {
     @Autowired PlatformTransactionManager txManager;
-
+    @Autowired MemberService memberService;
+    @Autowired MemberRepository memberRepository;
+    @Autowired LogRepository logRepository;
     @TestConfiguration
     static class Config {
         @Bean
@@ -79,6 +85,7 @@ public class BasicTxTest {
         txManager.rollback(txStatus2);
     }
 
+    @DisplayName("외부 트랜잭션의 내부 트랜잭션이 롤백되었을 때 외부 트랜잭션도 롤백된다.")
     @Test
     void inner_rollback() {
         log.info("트랜잭션1 시작");
@@ -93,7 +100,8 @@ public class BasicTxTest {
         assertThatThrownBy(() -> txManager.commit(outer))    // rollback-only 마크 있는지 체크 - 있으면 롤백하고 throw UnexpectedRollbackException
                 .isInstanceOf(UnexpectedRollbackException.class);
     }
-    // REQUIRES_NEW 전파 옵션
+
+    @DisplayName("REQUIRES_NEW 전파 옵션으로 인해 두개의 외부 트랜잭션을 생성하기 때문에 1개가 롤백되어도 1개는 커밋된다.")
     @Test
     void inner_rollback_requires_new() {
         log.info("트랜잭션1 시작");
