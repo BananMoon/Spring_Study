@@ -2,45 +2,47 @@ package moonz.springtx.propagation.member;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import moonz.springtx.propagation.log.LogService;
+import moonz.springtx.propagation.log.Log;
+import moonz.springtx.propagation.log.LogRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final LogService logService;
-
-    public Member joinV1(String username) {
+    private final LogRepository logRepository;
+     @Transactional
+    public void joinV1(String username) {
         Member member = new Member(username);
-        log.info("== MemberRepository 호출 시작 ==");
-        Member savedMember = memberRepository.save(member); // 트랜잭션이 자동으로 생기나?
-        log.info("== MemberRepository 호출 종료 ==");
-
-        // LogService.save()가 아닌 Log 객체 생성해서 바로 LogRepository 호출
-        logService.save(savedMember.getUsername());
-
-        return savedMember;
+        Log logMessage = new Log(username);
+        log.info("== memberRepository 호출 시작 ==");
+        memberRepository.save(member);
+        log.info("== memberRepository 호출 종료 ==");
+        log.info("== logRepository 호출 시작 ==");
+        logRepository.save(logMessage);
+        log.info("== logRepository 호출 종료 ==");
     }
 
     /**
      * 로그 저장 실패해도 회원가입을 완료시키고 싶은 경우
      */
-    public Member joinV2(String username) {
+    @Transactional
+    public void joinV2(String username) {
         Member member = new Member(username);
-        log.info("== MemberRepository 호출 시작 ==");
-        Member savedMember = memberRepository.save(member); // 트랜잭션이 자동으로 생기나?
-        log.info("== MemberRepository 호출 종료 ==");
+        Log logMessage = new Log(username);
+        log.info("== memberRepository 호출 시작 ==");
+        memberRepository.save(member);
+        log.info("== memberRepository 호출 종료 ==");
 
-        // LogService.save()가 아닌 Log 객체 생성해서 바로 LogRepository 호출
+        log.info("== logRepository 호출 시작 ==");
         try {
-            logService.save(savedMember.getUsername());
-        } catch (Exception e) {
-            log.error("== Log 저장에 실패했습니다. : {} ==", savedMember.getUsername());
-            log.info("정상 흐름 진행");
+            logRepository.save(logMessage);
+        } catch (RuntimeException e) {
+            log.info("log 저장에 실패했습니다. logMessage={}", logMessage.getMessage());
+            log.info("정상 흐름 변환");
         }
-
-        return savedMember;
+        log.info("== logRepository 호출 종료 ==");
     }
 }
