@@ -22,9 +22,10 @@ public class LogRepository {
      따라서 성능이 중요한 곳에서는 이런 부분을 주의해서 사용해야 한다.
      REQUIRES_NEW 를 사용하지 않고 문제를 해결할 수 있는 단순한 방법이 있다면, 그 방법을 선택하는 것이 더 좋다.
      - 참고: MemberService와 LogRepository를 호출하는 MemberFacade 클래스를 앞단에 둔다. 여기에 트랜잭션을 걸지 않으면
-     MemberService와 LogRepository부터 트랜잭션이 생성되므로 'REQUIRES' 속성만으로도 두 트랜잭션을 분리할 수 있게된다.
+     MemberService와 LogRepository부터 트랜잭션이 생성되므로 'REQUIRES' 속성만으로도 두 트랜잭션을 분리할 수 있게된다.ㅠ
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
+//    @Transactional(propagation = Propagation.REQUIRES_NEW)    // saveLog_failed_but_saveMember_succeed_using_REQUIRED_NEW() 테스트 수행 시 주석 해가
     public void save(Log logMessage) {
         log.info("log 저장"); em.persist(logMessage);
         if (logMessage.getMessage().contains("로그예외")) { log.info("log 저장시 예외 발생");
